@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pokeonta-bot
+  name: pokeonta-bot-v2
   labels:
     app: pokeonta-bot
 spec:
@@ -15,7 +15,7 @@ spec:
         app: pokeonta-bot
     spec:
       containers:
-        - name: pokeonta-bot
+        - name: pokeonta-bot-v2
           image: zzmmrmn/pokeonta-bot:<IMAGE_VERSION>
           env:
             - name: PRODUCTION_BOT
