@@ -116,6 +116,11 @@ class GoFestCog(Cog):
             )
         ]
 
+    @Cog.command()
+    async def habitat(self, ctx):
+        now = datetime.datetime.utcnow() - datetime.timedelta(hours=4)
+        await self.send_habitat_change(now.hour, current=True)
+
     async def ready(self):
         if datetime.datetime.utcnow() - datetime.timedelta(hours=4) < datetime.datetime(2020, 7, 25, 20, 0, 0, 0):
             self.logger.debug("Scheduling habitat change")
@@ -132,19 +137,19 @@ class GoFestCog(Cog):
             await asyncio.sleep(60)
             asyncio.get_event_loop().create_task(self.schedule_habitat_change())
 
-    async def send_habitat_change(self, hour: int):
+    async def send_habitat_change(self, hour: int, current: bool = False):
         self.logger.debug(f"Looking for habitat in hour {hour}")
         for habitat in self.hourly_features:
             if hour in habitat.times:
-                await self.send_habitat_message(habitat)
+                await self.send_habitat_message(habitat, current)
                 break
 
-    async def send_habitat_message(self, habitat: Habitat):
+    async def send_habitat_message(self, habitat: Habitat, current: bool = False):
         guild = self.client.get_guild(340162408498593793)
         channel: discord.TextChannel = discord.utils.get(guild.channels, name="go-fest-2020")
         embed = (
             discord.Embed(
-                title=f"We're now in the {habitat.name} Habitat!!!"
+                title=f"We're currently in the {habitat.name}" if current else f"We're now in the {habitat.name} Habitat!!!"
             )
             .add_field(
                 name="Featured Shinies!!!",
