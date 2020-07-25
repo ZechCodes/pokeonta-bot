@@ -25,7 +25,7 @@ def load_cogs(client: discord.ext.commands.Bot, logger):
     for cog, settings in pokeonta.config.get_scope("cogs", filenames=files):
         enabled = settings if isinstance(settings, bool) else settings.get("enabled", True)
         path = (
-            f"beginner.cogs.{cog}"
+            f"pokeonta.cogs.{cog}"
             if isinstance(settings, bool) or not settings.get("from")
             else settings.get("from")
         )
