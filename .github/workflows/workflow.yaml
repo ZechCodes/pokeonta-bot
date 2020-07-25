@@ -39,7 +39,7 @@ jobs:
       run: doctl kubernetes cluster kubeconfig save personal-kubernetes
 
     - name: Deploy to DigitalOcean Kubernetes
-      run: kubectl apply -f $GITHUB_WORKSPACE/manifests/bot.yaml -n bpy
+      run: kubectl apply -f $GITHUB_WORKSPACE/manifests/bot.yaml -n pokeonta
 
     - name: Verify deployment
       run: kubectl rollout status deployment/pokeonta-bot -n pokeonta
