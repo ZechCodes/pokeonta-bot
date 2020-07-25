@@ -127,7 +127,7 @@ class GoFestCog(Cog):
         self.logger.debug(f"Next habitat change in {(next_change - now).seconds}")
         await asyncio.sleep((next_change - now).seconds)
 
-        now = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        now = datetime.datetime.utcnow() - datetime.timedelta(hours=4)
         await self.send_habitat_change(now.hour)
         if now + datetime.timedelta(hours=1) < datetime.datetime(2020, 7, 25, 20, 0, 0, 0):
             asyncio.get_event_loop().create_task(self.schedule_habitat_change())
