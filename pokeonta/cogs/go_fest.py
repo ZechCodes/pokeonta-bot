@@ -149,7 +149,7 @@ class GoFestCog(Cog):
         channel: discord.TextChannel = discord.utils.get(guild.channels, name="go-fest-2020")
         embed = (
             discord.Embed(
-                title=f"We're currently in the {habitat.name}" if current else f"We're now in the {habitat.name} Habitat!!!"
+                title=f"We're currently in the {habitat.name} habitat" if current else f"We're now in the {habitat.name} Habitat!!!"
             )
             .add_field(
                 name="Featured Shinies!!!",
