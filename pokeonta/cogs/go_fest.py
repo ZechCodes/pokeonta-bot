@@ -28,7 +28,7 @@ class GoFestCog(Cog):
                     "Gible": True,
                     "Croagunk": True,
                     "Stunfisk": False,
-                    "Durant": True,
+                    "**Durant**": True,
                 },
                 times=[10, 15]
             ),
@@ -49,7 +49,7 @@ class GoFestCog(Cog):
                     "Roselia": True,
                     "Feebas": True,
                     "Chimecho": False,
-                    "Woobat": True
+                    "**Woobat**": True
                 },
                 times=[11, 16]
             ),
@@ -69,7 +69,7 @@ class GoFestCog(Cog):
                     "Tepig": False,
                     "Darumaka": False,
                     "Litwick": False,
-                    "Heatmor": True
+                    "**Heatmor**": True
                 },
                 times=[12, 17]
             ),
@@ -83,7 +83,7 @@ class GoFestCog(Cog):
                     "Slowpoke": False,
                     "Magikarp": True,
                     "Chinchou": True,
-                    "Qwilfish": True,
+                    "**Qwilfish**": True,
                     "Mudkip": True,
                     "Carvanha": True,
                     "Clamperl": True,
@@ -101,7 +101,7 @@ class GoFestCog(Cog):
                     "Oddish": True,
                     "Exeggcute": True,
                     "Alolan Exeggcutor": True,
-                    "Tangela": True,
+                    "**Tangela**": True,
                     "Sunkern": True,
                     "Treecko": True,
                     "Seedot": True,
