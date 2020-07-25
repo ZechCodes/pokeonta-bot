@@ -1,4 +1,4 @@
-from beginner.cog import Cog, commands
+from pokeonta.cog import Cog, commands
 
 
 class DevCog(Cog):

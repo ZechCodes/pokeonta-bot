@@ -1,45 +1,11 @@
-import beginner.config as config
-import beginner.logging
+import pokeonta.config as config
+import pokeonta.logging
 import discord.ext.commands
 import logging
-from beginner.models import set_database, PostgresqlDatabase
-
-
-def connect_db(logger):
-    logger.info(f"Attempting to connect the DB")
-
-    db_settings = beginner.config.scope_getter("database")
-
-    name = db_settings("name", env_name="DB_NAME")
-    user = db_settings("user", env_name="DB_USER")
-    host = db_settings("host", env_name="DB_HOST")
-    port = db_settings("port", env_name="DB_PORT")
-    mode = "require" if db_settings("PRODUCTION_BOT", default=False) else None
-    password = db_settings("pass", env_name="DB_PASSWORD")
-
-    logger.debug(
-        f"\nConnecting to database:\n"
-        f"- Name {name}\n"
-        f"- User {user}\n"
-        f"- Host {host}\n"
-        f"- Port {port}\n"
-        f"- Mode {mode}\n"
-        f"- Pass ******"
-    )
-
-    db = PostgresqlDatabase(
-        name,
-        user=user,
-        host=host,
-        port=port,
-        password=password,
-        sslmode=mode,
-    )
-    set_database(db)
 
 
 def create_bot(logger) -> discord.ext.commands.Bot:
-    bot_settings = beginner.config.scope_getter("bot")
+    bot_settings = pokeonta.config.scope_getter("bot")
 
     logger.debug(f"Creating bot with prefix '{bot_settings('prefix')}'")
     client = discord.ext.commands.Bot(
@@ -55,8 +21,8 @@ def create_bot(logger) -> discord.ext.commands.Bot:
 
 def load_cogs(client: discord.ext.commands.Bot, logger):
     logger.debug("Loading cogs")
-    files = ("production" if beginner.config.get_setting("PRODUCTION_BOT") else "development",)
-    for cog, settings in beginner.config.get_scope("cogs", filenames=files):
+    files = ("production" if pokeonta.config.get_setting("PRODUCTION_BOT") else "development",)
+    for cog, settings in pokeonta.config.get_scope("cogs", filenames=files):
         enabled = settings if isinstance(settings, bool) else settings.get("enabled", True)
         path = (
             f"beginner.cogs.{cog}"
@@ -114,7 +80,7 @@ def setup_logger():
         level=levels.get(log_settings("global_level", default="").casefold(), logging.ERROR)
     )
 
-    logger = beginner.logging.get_logger()
+    logger = pokeonta.logging.get_logger()
     logger.setLevel(level)
 
     for name, _level in log_settings("loggers", default={}).items():
@@ -125,7 +91,7 @@ def setup_logger():
 
 
 def _get_token():
-    token = beginner.config.get_setting("token", scope="bot", env_name="DISCORD_TOKEN", default="")
+    token = pokeonta.config.get_setting("token", scope="bot", env_name="DISCORD_TOKEN", default="")
     return token.strip()
 
 

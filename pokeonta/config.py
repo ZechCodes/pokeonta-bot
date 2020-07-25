@@ -1,9 +1,9 @@
-import beginner.logging
+import pokeonta.logging
 import functools
 import os
 import pathlib
 import yaml
-from typing import Any, Dict, Optional, Sequence, Protocol
+from typing import Any, Dict, Optional, Sequence
 
 
 class ScopedGetter:
@@ -13,7 +13,7 @@ class ScopedGetter:
 
 @functools.lru_cache()
 def get_config(filename: str) -> Dict[str, Any]:
-    logger = beginner.logging.get_logger()
+    logger = pokeonta.logging.get_logger()
 
     project = pathlib.Path(__file__).parent.parent
     file_path = project / f"{filename}.yaml"

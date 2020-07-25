@@ -1,8 +1,8 @@
-import beginner.bootstrap
+import pokeonta.bootstrap
 
 
-logger = beginner.bootstrap.setup_logger()
-client = beginner.bootstrap.create_bot(logger)
-beginner.bootstrap.load_cogs(client, logger)
-beginner.bootstrap.connect_db(logger)
-beginner.bootstrap.run(client, logger)
+logger = pokeonta.bootstrap.setup_logger()
+client = pokeonta.bootstrap.create_bot(logger)
+pokeonta.bootstrap.load_cogs(client, logger)
+pokeonta.bootstrap.connect_db(logger)
+pokeonta.bootstrap.run(client, logger)
