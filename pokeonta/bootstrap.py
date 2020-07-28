@@ -2,6 +2,40 @@ import pokeonta.config as config
 import pokeonta.logging
 import discord.ext.commands
 import logging
+from pokeonta.models import PostgresqlDatabase, set_database
+
+
+def connect_db(logger):
+    logger.info(f"Attempting to connect the DB")
+
+    db_settings = pokeonta.config.scope_getter("database")
+
+    name = db_settings("name", env_name="DB_NAME")
+    user = db_settings("user", env_name="DB_USER")
+    host = db_settings("host", env_name="DB_HOST")
+    port = db_settings("port", env_name="DB_PORT")
+    mode = "require" if db_settings("PRODUCTION_BOT", default=False) else None
+    password = db_settings("pass", env_name="DB_PASSWORD")
+
+    logger.debug(
+        f"\nConnecting to database:\n"
+        f"- Name {name}\n"
+        f"- User {user}\n"
+        f"- Host {host}\n"
+        f"- Port {port}\n"
+        f"- Mode {mode}\n"
+        f"- Pass ******"
+    )
+
+    db = PostgresqlDatabase(
+        name,
+        user=user,
+        host=host,
+        port=port,
+        password=password,
+        sslmode=mode,
+    )
+    set_database(db)
 
 
 def create_bot(logger) -> discord.ext.commands.Bot:
