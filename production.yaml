@@ -1,6 +1,6 @@
 bot:
   prefix: "!"
-  status: "new pokemon"
+  status: "for pokemon"
 
 cogs:
   go_fest: false
