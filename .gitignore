@@ -111,3 +111,4 @@ postgres-data
 /manifests/postgres-password.yaml
 /bot/env
 /development.yaml
+pg-pword.yaml
