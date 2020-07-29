@@ -68,7 +68,7 @@ class TrainerCards(Cog):
             .add_field(
                 name="Tips",
                 value=(
-                    "You can shorten the command from `!trainer` to `!t` ;)!d"
+                    "You can shorten the command from `!trainer` to `!t` ;)"
                 ),
                 inline=False
             )
