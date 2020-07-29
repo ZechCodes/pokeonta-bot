@@ -4,6 +4,7 @@ bot:
 
 cogs:
   go_fest: false
+  trainer_cards: true
 
 logging:
   format: "%(asctime)s: %(levelname)-9s %(name)-16s :: %(message)s"
