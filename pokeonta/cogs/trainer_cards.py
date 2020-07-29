@@ -89,7 +89,7 @@ class TrainerCards(Cog):
                 description=message.pop("description")
             )
             .set_thumbnail(url=member.avatar_url)
-            .set_footer(text="!trainer help | !trainer @username | !trainer edit")
+            .set_footer(text="!trainer help | !trainer @username | !trainer edit trainer_name friend_code")
         )
         for title, content in message.items():
             embed.add_field(name=title, value=content, inline=False)
