@@ -80,8 +80,9 @@ class TrainerCards(Cog):
         if not card:
             message["description"] = f"They have not yet setup their trainer card."
         else:
-            message["About"] = f"Their in game name is *{card.trainer_name}*"
-            message["description"] = self.format_code(card.friend_code) if card.friend_code else "*They have not set a friend code*"
+            friend_code = self.format_code(card.friend_code) if card.friend_code else "*They have not set a friend code*"
+            message["description"] = f"Their in game name is *{card.trainer_name}*"
+            message["Friend Code"] = f"{friend_code} *(copy it from above)*"
 
         embed = (
             discord.Embed(
@@ -94,8 +95,7 @@ class TrainerCards(Cog):
         for title, content in message.items():
             embed.add_field(name=title, value=content, inline=False)
 
-        await channel.send(embed=embed)
-        await channel.send(self.format_code(card.friend_code))
+        await channel.send(content=self.format_code(card.friend_code), embed=embed)
 
     def format_code(self, code: str) -> str:
         sections = re.findall(r"\d{1,4}", code)
