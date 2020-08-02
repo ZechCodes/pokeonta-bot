@@ -42,10 +42,8 @@ class AirSupportCog(Cog):
         emoji = discord.utils.get(ctx.guild.emojis, name="remote")
         await ctx.message.delete()
         await channel.send(
-            embed=discord.Embed(
-                color=Colors.BLUE,
-                title="Remote Raid Hosting"
-            ).add_field(
+            embed=discord.Embed(color=Colors.BLUE, title="Remote Raid Hosting")
+            .add_field(
                 name="Hosting A Raid",
                 value=(
                     "You can broadcast that you can invite people to a raid using the `!hosting` command.```\n!hosting "
@@ -53,26 +51,34 @@ class AirSupportCog(Cog):
                     "1:* a Gible raid at vander in 15 minutes\n*Example 2:* Rayquaza raid at Fire Dog at 1:30\n*Example"
                     " 3:* Elm Park for a legendary with a 12 o'clock pull."
                 ),
-                inline=False
-            ).add_field(
+                inline=False,
+            )
+            .add_field(
                 name="Seeing Invites",
                 value="You can see who has requested an invite using the `!invites` command:```\n!invites Vander\n```",
-                inline=False
-            ).add_field(
+                inline=False,
+            )
+            .add_field(
                 name="Trainer Card",
                 value=(
                     "In order to use this feature you must have a trainer card with a friend code setup. To do that "
                     "this command:```\n!trainer edit trainer_name friend_code\n```"
                 ),
-                inline=False
-            ).set_thumbnail(
+                inline=False,
+            )
+            .set_thumbnail(
                 url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/Item_1408_5.png"
             )
         )
 
     @Cog.group(aliases=("host", "h"))
     async def hosting(
-        self, ctx: Context, raw_time: str, raid_type: str = None, *, location: str = None
+        self,
+        ctx: Context,
+        raw_time: str,
+        raid_type: str = None,
+        *,
+        location: str = None,
     ):
         if ctx.invoked_subcommand:
             return
@@ -122,22 +128,29 @@ class AirSupportCog(Cog):
             )
         )
 
-    @Cog.command(aliases=("done","d"))
+    @Cog.command(aliases=("done", "d"))
     async def cancel(self, ctx: Context, location: str):
         group = self.get_group(ctx.author, location)
         if not group:
-            await ctx.send("Group was already canceled and was never created")
+            await ctx.send("Group was already canceled or was never created")
             return
 
         rsvps = list(
             filter(lambda rsvp: not rsvp.bot, await self.get_rsvps(group, ctx.guild))
         )
         await self.delete_group(group.id, self.air_support_channel(ctx.guild).id)
-        await ctx.send(
+
+        message = (
             f"{ctx.author.mention} You've canceled your raid group at {group.location} for a {group.raid_type} at "
             f"{group.time:%-I:%M%p}\nDropping RSVPs from: "
             f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
         )
+        if ctx.command != "cancel":
+            message = (
+                f"{ctx.author.mention} Removing the group at {group.location} for a {group.raid_type} at "
+                f"{group.time:%-I:%M%p}"
+            )
+        await ctx.send(message)
 
     @Cog.command(aliases=("invite", "i"))
     async def invites(self, ctx: Context, location: str):
