@@ -36,13 +36,13 @@ class Events(Cog):
             if current:
                 embed.add_field(
                     name="Current Events",
-                    value="\n".join(format_event(event) for event in current),
+                    value="\n".join(format_event(event) for event in current[:5]),
                     inline=False
                 )
             if upcoming:
                 embed.add_field(
                     name="Upcoming Events",
-                    value="\n".join(format_event(event) for event in upcoming),
+                    value="\n".join(format_event(event) for event in upcoming[:5]),
                     inline = False
                 )
             await ctx.send(embed=embed)
