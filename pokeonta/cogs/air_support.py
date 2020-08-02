@@ -86,6 +86,12 @@ class AirSupportCog(Cog):
             f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
         )
 
+    async def get_message(self, channel: discord.TextChannel, message_id: int) -> Optional[discord.Message]:
+        try:
+            return await channel.fetch_message(message_id)
+        except discord.errors.NotFound:
+            return
+
     # Helper Functions
 
     def create_group(
