@@ -5,6 +5,7 @@ bot:
 cogs:
   go_fest: false
   trainer_cards: true
+  air_support: true
   events: true
 
 logging:
