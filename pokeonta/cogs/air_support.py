@@ -182,11 +182,18 @@ class AirSupportCog(Cog):
         if reaction.member.bot:
             return
 
-
         guild: discord.Guild = self.client.get_guild(reaction.guild_id)
         if reaction.channel_id != self.air_support_channel(guild).id:
             return
 
+        group = self.get_group_by_message_id(reaction.message_id)
+        if not group:
+            return
+
+        if reaction.emoji.name not in {"raidpass", "remote"}:
+            return
+
+        host = guild.get_member(group.host_id)
         raids = discord.utils.get(guild.channels, name="raids")
         message = await self.get_message(
             self.air_support_channel(guild), reaction.message_id
@@ -197,21 +204,21 @@ class AirSupportCog(Cog):
                 await message.remove_reaction(reaction.emoji, reaction.member)
                 return
 
-            remote_emoji: discord.Emoji = discord.utils.get(
-                guild.emojis, name="remote"
-            )
             await raids.send(
                 embed=Embed(
-                    description=f"{reaction.member.mention} has RSVP'd to [a raid]({message.jump_url}) {remote_emoji}"
+                    description=(
+                        f"{reaction.member.mention} would like to join {host.mention} at "
+                        f"[{group.location}]({message.jump_url}) {reaction.emoji}"
+                    )
                 )
             )
         elif reaction.emoji.name == "raidpass":
-            raid_pass_emoji: discord.Emoji = discord.utils.get(
-                guild.emojis, name="raidpass"
-            )
             await raids.send(
                 embed=Embed(
-                    description=f"{reaction.member.mention} will be at [the raid]({message.jump_url}) {raid_pass_emoji}"
+                    description=(
+                        f"{reaction.member.mention} will be joining {host.mention} at "
+                        f"[{group.location}]({message.jump_url}) {reaction.emoji}"
+                    )
                 )
             )
 
@@ -297,6 +304,9 @@ class AirSupportCog(Cog):
             AirSupportGroup.host_id == member.id,
             AirSupportGroup.location == location.casefold(),
         )
+
+    def get_group_by_message_id(self, message_id: int) -> Optional[AirSupportGroup]:
+        return AirSupportGroup.get_or_none(AirSupportGroup.message_id == message_id)
 
     async def get_rsvps(
         self, group: AirSupportGroup, guild: discord.Guild
