@@ -115,6 +115,7 @@ class Events(Cog):
             event.save()
             self.schedule_event(values)
             await ctx.send(content=f"Event created")
+            await self.send_event_message(values, "Upcoming")
 
     def schedule_event(self, event_dict):
         event = Event(**event_dict)
@@ -140,7 +141,7 @@ class Events(Cog):
         await channel.send(
             embed=(
                 discord.Embed(
-                    description=event.description if event.ends > self.now() else "*This event is over*",
+                    description=event.description if event.ends > self.now().replace(tzinfo=None) else "*This event is over*",
                     title=f"{title}: {event.title}"
                 )
                 .add_field(
