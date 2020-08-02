@@ -168,7 +168,10 @@ class AirSupportCog(Cog):
         self, group: AirSupportGroup, guild: discord.Guild
     ) -> List[discord.Member]:
         channel = self.air_support_channel(guild)
-        message = await channel.fetch_message(group.message_id)
+        message = await self.get_message(channel, group.message_id)
+        if not message:
+            return []
+
         emoji = discord.utils.get(message.guild.emojis, name="remote")
         return await discord.utils.get(message.reactions, emoji=emoji).users().flatten()
 
