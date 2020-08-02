@@ -2,6 +2,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from dateutil.tz import gettz
 from discord.ext.commands import Context
+from functools import lru_cache
 from pokeonta.cog import Cog
 from pokeonta.models.air_support_group import AirSupportGroup
 from pokeonta.models.trainer_cards import TrainerCards
@@ -17,6 +18,10 @@ class Colors:
 
 
 class AirSupportCog(Cog):
+    @lru_cache()
+    def air_support_channel(self, guild: discord.Guild) -> discord.TextChannel:
+        return discord.utils.get(guild.channels, name="air-support")
+
     @property
     def now(self) -> datetime:
         """ The current time in NY. """
@@ -84,10 +89,9 @@ class AirSupportCog(Cog):
         raid_type: str,
         location: str,
     ) -> discord.Message:
-        channel = discord.utils.get(host.guild.channels, name="air-support")
         card = self.get_trainer_card(host.id)
-        remote_emoji: discord.Emoji = discord.utils.get(channel.guild.emojis, name="remote")
-        message = await channel.send(
+        remote_emoji: discord.Emoji = discord.utils.get(host.guild.emojis, name="remote")
+        message = await self.air_support_channel(host.guild).send(
             card.friend_code,
             embed=(
                 discord.Embed(
