@@ -12,6 +12,10 @@ import discord
 import re
 
 
+class Colors:
+    GREEN = 0x00aa44
+
+
 class AirSupportCog(Cog):
     @property
     def now(self) -> datetime:
