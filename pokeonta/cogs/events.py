@@ -27,7 +27,12 @@ class Events(Cog):
             def format_event(event: Event):
                 title = f"[{event.title}]({event.link})" if event.link else event.title
                 channel = self.client.get_channel(int(event.channel_id))
-                return f"{title} ({event.starts:%b %-d}-{event.ends:%b %-d}) {channel.mention if channel else ''}"
+                starts = f"{event.starts:%b %-d}"
+                ends = f"{event.ends:%b %-d}"
+                dates = f"{starts} - {ends}"
+                if starts == ends:
+                    dates = starts
+                return f"{title} ({dates}) {channel.mention if channel else ''}"
 
             embed = discord.Embed(
                 title="Current & Upcoming Events",
