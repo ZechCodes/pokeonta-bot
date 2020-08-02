@@ -36,11 +36,7 @@ class AirSupportCog(Cog):
 
         # Ensure that the user has filled out their trainer card so we can share their friend code
         if not self.is_trainer_card_complete(ctx.author):
-            await ctx.send(
-                f"{ctx.author.mention} you must fill out your trainer card with your trainer name and friend code.\n"
-                f"```\n!trainer edit your_trainer_name your_friend_code\n```\n"
-                f"Like this\n```\n!trainer edit ZZmmrmn 1234 5678 9012\n```"
-            )
+            await self.send_trainer_card_instructions(ctx.channel, ctx.author)
             return
 
         # Ensure the time is a proper format and that it's not so far in the future that it can't exist
@@ -227,6 +223,19 @@ class AirSupportCog(Cog):
     def schedule_expiration(self, group: AirSupportGroup, channel: discord.TextChannel):
         when = (group.time + timedelta(minutes=45)) - self.now
         schedule("air-support-group-invite", when, self.delete_group, group.get_id(), channel.id)
+
+    async def send_trainer_card_instructions(
+        self,
+        channel: discord.TextChannel,
+        member: discord.Member,
+        delete_after: Optional[int] = None,
+    ):
+        await channel.send(
+            f"{member.mention} you must fill out your trainer card with your trainer name and friend code.\n"
+            f"```\n!trainer edit your_trainer_name your_friend_code\n```\n"
+            f"Like this\n```\n!trainer edit ZZmmrmn 1234 5678 9012\n```",
+            delete_after=delete_after,
+        )
 
 
 def setup(client):
