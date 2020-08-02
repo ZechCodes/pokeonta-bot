@@ -122,7 +122,7 @@ class AirSupportCog(Cog):
             )
         )
 
-    @Cog.command()
+    @Cog.command(aliases=("done","d"))
     async def cancel(self, ctx: Context, location: str):
         group = self.get_group(ctx.author, location)
         if not group:
