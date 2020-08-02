@@ -206,8 +206,8 @@ class AirSupportCog(Cog):
 
             card = self.get_trainer_card(reaction.member.id)
             await raids.send(
+                card.friend_code,
                 embed=Embed(
-                    card.friend_code,
                     description=(
                         f"{reaction.member.mention} would like to join {host.mention} at "
                         f"[{group.location}]({message.jump_url}) {reaction.emoji}\nGet their friend code above."
