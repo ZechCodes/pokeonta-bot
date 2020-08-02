@@ -8,7 +8,7 @@ from pokeonta.models.air_support_group import AirSupportGroup
 from pokeonta.models.trainer_cards import TrainerCards
 from pokeonta.scheduler import schedule
 from pokeonta.tags import tag
-from typing import Optional
+from typing import List, Optional
 import discord
 import re
 
@@ -146,6 +146,12 @@ class AirSupportCog(Cog):
             AirSupportGroup.host_id == member.id,
             AirSupportGroup.location == location.casefold(),
         )
+
+    async def get_rsvps(self, group: AirSupportGroup, guild: discord.Guild) -> List[discord.Member]:
+        channel = self.air_support_channel(guild)
+        message = await channel.fetch_message(group.message_id)
+        emoji = discord.utils.get(message.guild.emojis, name="remote")
+        return await discord.utils.get(message.reactions, emoji=emoji).users().flatten()
 
     def get_trainer_card(self, member_id: int) -> Optional[TrainerCards]:
         """ Gets a trainer card for a member. """
