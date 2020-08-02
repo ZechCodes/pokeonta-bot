@@ -71,7 +71,7 @@ class AirSupportCog(Cog):
         self.schedule_expiration(group, message.channel)
 
         await ctx.send(
-            embed=discord.Embed(
+            embed=Embed(
                 color=Colors.GREEN,
                 description=(
                     f"{ctx.author.mention} is hosting a {raid_type} raid! You can join him "
@@ -97,7 +97,6 @@ class AirSupportCog(Cog):
             f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
         )
 
-    async def get_message(self, channel: discord.TextChannel, message_id: int) -> Optional[discord.Message]:
     @Cog.command()
     async def invites(self, ctx: Context, location: str):
         group = self.get_group(ctx.author, location)
@@ -156,7 +155,7 @@ class AirSupportCog(Cog):
         message = await self.air_support_channel(host.guild).send(
             card.friend_code,
             embed=(
-                discord.Embed(
+                Embed(
                     description=(
                         f"Location: {location}\n"
                         f"Time: {time:%-I:%M%p}\n"
@@ -279,9 +278,15 @@ class AirSupportCog(Cog):
         delete_after: Optional[int] = None,
     ):
         await channel.send(
-            f"{member.mention} you must fill out your trainer card with your trainer name and friend code.\n"
-            f"```\n!trainer edit your_trainer_name your_friend_code\n```\n"
-            f"Like this\n```\n!trainer edit ZZmmrmn 1234 5678 9012\n```",
+            member.mention,
+            embed=Embed(
+                description=(
+                    f"You must fill out your trainer card with your trainer name and friend code.\n"
+                    f"```\n!trainer edit your_trainer_name your_friend_code\n```\n"
+                    f"Like this\n```\n!trainer edit ZZmmrmn 1234 5678 9012\n```"
+                ),
+                color=Colors.YELLOW,
+            ),
             delete_after=delete_after,
         )
 
