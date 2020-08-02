@@ -238,6 +238,9 @@ class AirSupportCog(Cog):
         remote_emoji: discord.Emoji = discord.utils.get(
             host.guild.emojis, name="remote"
         )
+        raid_pass_emoji: discord.Emoji = discord.utils.get(
+            host.guild.emojis, name="raidpass"
+        )
         message = await self.air_support_channel(host.guild).send(
             card.friend_code,
             embed=(
@@ -253,6 +256,7 @@ class AirSupportCog(Cog):
                     name="How To Join",
                     value=(
                         f"- React with {remote_emoji} to request an invite.\n"
+                        f"- React with {raid_pass_emoji} if you're doing it and don't need an invite.\n"
                         f"- Add {host.mention} as a friend using their friend code above."
                     ),
                 )
@@ -260,6 +264,7 @@ class AirSupportCog(Cog):
             ),
         )
         await message.add_reaction(remote_emoji)
+        await message.add_reaction(raid_pass_emoji)
         return message
 
     @tag("schedule", "delete-air-support-group")
