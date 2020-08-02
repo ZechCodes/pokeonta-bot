@@ -72,9 +72,15 @@ class AirSupportCog(Cog):
 
     @Cog.group(aliases=("host", "h"))
     async def hosting(
-        self, ctx: Context, raw_time: str, raid_type: str, *, location: str
+        self, ctx: Context, raw_time: str, raid_type: str = None, *, location: str = None
     ):
         if ctx.invoked_subcommand:
+            return
+
+        if raid_type is None or location is None:
+            await ctx.send(
+                "You must tell us what the pokemon/raid level is and the location.```\n!hosting 10 Gible Vander\n```"
+            )
             return
 
         # Ensure that the user has filled out their trainer card so we can share their friend code
