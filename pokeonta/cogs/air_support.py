@@ -129,7 +129,7 @@ class AirSupportCog(Cog):
         )
 
     @Cog.command(aliases=("done", "d"))
-    async def cancel(self, ctx: Context, location: str):
+    async def cancel(self, ctx: Context, *, location: str):
         group = self.get_group(ctx.author, location)
         if not group:
             await ctx.send("Group was already canceled or was never created")
