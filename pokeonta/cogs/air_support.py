@@ -73,8 +73,10 @@ class AirSupportCog(Cog):
         await ctx.send(
             embed=discord.Embed(
                 color=Colors.GREEN,
-                description=f"{ctx.author.mention} is hosting a {raid_type} raid! You can join him "
-                            f"[here]({message.jump_url})."
+                description=(
+                    f"{ctx.author.mention} is hosting a {raid_type} raid! You can join him "
+                    f"[here]({message.jump_url})."
+                ),
             )
         )
 
