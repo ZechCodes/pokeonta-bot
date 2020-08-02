@@ -201,8 +201,8 @@ class AirSupportCog(Cog):
             )
             await raids.send(
                 embed=Embed(
-                    description=f"{reaction.member.mention} has RSVP'd to [a raid]({message.jump_url}) {remote_emoji}"
-                )
+                    description=f"{reaction.member.mention} has RSVP'd to [a raid]({message.jump_url})"
+                ).set_thumbnail(url=remote_emoji.url)
             )
         elif reaction.emoji.name == "raidpass":
             raid_pass_emoji: discord.Emoji = discord.utils.get(
@@ -211,7 +211,7 @@ class AirSupportCog(Cog):
             await raids.send(
                 embed=Embed(
                     description=f"{reaction.member.mention} will be at [the raid]({message.jump_url}) {raid_pass_emoji}"
-                )
+                ).set_thumbnail(url=raid_pass_emoji.url)
             )
 
     async def get_message(
