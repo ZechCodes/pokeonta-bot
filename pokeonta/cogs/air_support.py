@@ -75,6 +75,20 @@ class AirSupportCog(Cog):
             )
         )
 
+    @Cog.command()
+    async def cancel(self, ctx: Context, location: str):
+        group = self.get_group(ctx.author, location)
+        if not group:
+            await ctx.send("Group was already canceled and was never created")
+            return
+
+        rsvps = await self.get_rsvps(group, ctx.guild)
+        await self.delete_group(group.id, self.air_support_channel(ctx.guild).id)
+        await ctx.send(
+            f"{ctx.author.mention} You've canceled your raid group at {group.location} for a {group.raid_type} at "
+            f"{group.time:%-I:%M%p}\nDropping RSVPs from: {' '.join(rsvp.mention for rsvp in rsvps if not rsvp.bot)}"
+        )
+
     # Helper Functions
 
     def create_group(
