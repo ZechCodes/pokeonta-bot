@@ -95,7 +95,7 @@ class TrainerCards(Cog):
         for title, content in message.items():
             embed.add_field(name=title, value=content, inline=False)
 
-        await channel.send(content=self.format_code(card.friend_code), embed=embed)
+        await channel.send(content=self.format_code(card.friend_code) if card else "", embed=embed)
 
     def format_code(self, code: str) -> str:
         sections = re.findall(r"\d{1,4}", code)
