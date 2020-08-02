@@ -40,6 +40,7 @@ class AirSupportCog(Cog):
     async def setup(self, ctx: Context):
         channel = self.air_support_channel(ctx.guild)
         emoji = discord.utils.get(ctx.guild.emojis, name="remote")
+        await ctx.message.delete()
         await channel.send(
             embed=discord.Embed(
                 color=Colors.BLUE,
@@ -52,6 +53,10 @@ class AirSupportCog(Cog):
                     "1:* a Gible raid at vander in 15 minutes\n*Example 2:* Rayquaza raid at Fire Dog at 1:30\n*Example"
                     " 3:* Elm Park for a legendary with a 12 o'clock pull."
                 ),
+                inline=False
+            ).add_field(
+                name="Seeing Invites",
+                value="You can see who has requested an invite using the `!invites` command:```\n!invites Vander\n```",
                 inline=False
             ).add_field(
                 name="Trainer Card",
@@ -128,7 +133,7 @@ class AirSupportCog(Cog):
             f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
         )
 
-    @Cog.command()
+    @Cog.command(aliases=("invite", "i"))
     async def invites(self, ctx: Context, location: str):
         group = self.get_group(ctx.author, location)
         if not group:
