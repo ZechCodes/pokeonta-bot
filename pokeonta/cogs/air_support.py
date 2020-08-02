@@ -98,6 +98,29 @@ class AirSupportCog(Cog):
         )
 
     async def get_message(self, channel: discord.TextChannel, message_id: int) -> Optional[discord.Message]:
+    @Cog.command()
+    async def invites(self, ctx: Context, location: str):
+        group = self.get_group(ctx.author, location)
+        if not group:
+            await ctx.send("Couldn't find a group for that location")
+            return
+
+        message = []
+        rsvps = filter(
+            lambda rsvp: not rsvp.bot, await self.get_rsvps(group, ctx.guild)
+        )
+        for rsvp in rsvps:
+            card = self.get_trainer_card(rsvp.id)
+            message.append(f"{rsvp.mention} - IGN: *{card.trainer_name}*")
+
+        await ctx.send(
+            ctx.author.mention,
+            embed=Embed(
+                description="\n".join(message) if message else "*No RSVPs Found*",
+                title=f"RSVPs for {group.location}",
+                color=Colors.GREEN,
+            ),
+        )
         try:
             return await channel.fetch_message(message_id)
         except discord.errors.NotFound:
