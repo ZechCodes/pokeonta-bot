@@ -99,7 +99,7 @@ class TrainerCards(Cog):
 
     def format_code(self, code: str) -> str:
         sections = re.findall(r"\d{1,4}", code)
-        return " ".join(sections)
+        return "".join(sections)
 
     def get_trainer_card(self, member_id: int) -> Optional[TrainerCardsModel]:
         return TrainerCardsModel.get_or_none(TrainerCardsModel.user_id == member_id)
