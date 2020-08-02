@@ -1,7 +1,7 @@
 from __future__ import annotations
 from datetime import datetime, timedelta
 from dateutil.tz import gettz
-from discord.ext.commands import Context
+from discord.ext.commands import Context, has_guild_permissions
 from functools import lru_cache
 from pokeonta.cog import Cog
 from pokeonta.models.air_support_group import AirSupportGroup
@@ -14,6 +14,7 @@ import re
 
 
 class Colors:
+    BLUE = 0x4444CC
     GREEN = 0x00AA44
     YELLOW = 0xCC9900
 
@@ -33,6 +34,36 @@ class AirSupportCog(Cog):
     def now(self) -> datetime:
         """ The current time in NY. """
         return datetime.now(gettz("America/New_York"))
+
+    @Cog.command()
+    @has_guild_permissions(manage_channels=True)
+    async def setup(self, ctx: Context):
+        channel = self.air_support_channel(ctx.guild)
+        emoji = discord.utils.get(ctx.guild.emojis, name="remote")
+        await channel.send(
+            embed=discord.Embed(
+                color=Colors.BLUE,
+                title="Remote Raid Hosting"
+            ).add_field(
+                name="Hosting A Raid",
+                value=(
+                    "You can broadcast that you can invite people to a raid using the `!hosting` command.```\n!hosting "
+                    "15 Gible Vander\n!hosting 1:30 Rayquaza Fire Dog\n!hosting 12:00 5* Elm Park Gym\n```\n*Example "
+                    "1:* a Gible raid at vander in 15 minutes\n*Example 2:* Rayquaza raid at Fire Dog at 1:30\n*Example"
+                    " 3:* Elm Park for a legendary with a 12 o'clock pull."
+                ),
+                inline=False
+            ).add_field(
+                name="Trainer Card",
+                value=(
+                    "In order to use this feature you must have a trainer card with a friend code setup. To do that "
+                    "this command:```\n!trainer edit trainer_name friend_code\n```"
+                ),
+                inline=False
+            ).set_thumbnail(
+                url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/Item_1408_5.png"
+            )
+        )
 
     @Cog.group(aliases=("host", "h"))
     async def hosting(
