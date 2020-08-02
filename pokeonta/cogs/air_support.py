@@ -107,8 +107,8 @@ class AirSupportCog(Cog):
         await message.add_reaction(remote_emoji)
         return message
 
-    @tag("schedule", "expire-air-support-group")
-    async def expire_group(self, group_id: int, channel_id: int):
+    @tag("schedule", "delete-air-support-group")
+    async def delete_group(self, group_id: int, channel_id: int):
         group: AirSupportGroup = AirSupportGroup.get_by_id(group_id)
         channel: discord.TextChannel = self.client.get_channel(channel_id)
         if group:
@@ -167,7 +167,7 @@ class AirSupportCog(Cog):
 
     def schedule_expiration(self, group: AirSupportGroup, channel: discord.TextChannel):
         when = (group.time + timedelta(minutes=45)) - self.now
-        schedule("air-support-group-invite", when, self.expire_group, group.get_id(), channel.id)
+        schedule("air-support-group-invite", when, self.delete_group, group.get_id(), channel.id)
 
 
 def setup(client):
