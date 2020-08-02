@@ -18,6 +18,12 @@ class Colors:
     YELLOW = 0xCC9900
 
 
+class Embed(discord.Embed):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.set_footer(text="!hosting time pokemon/level location")
+
+
 class AirSupportCog(Cog):
     @lru_cache()
     def air_support_channel(self, guild: discord.Guild) -> discord.TextChannel:
