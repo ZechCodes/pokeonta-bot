@@ -150,7 +150,7 @@ class AirSupportCog(Cog):
         group: AirSupportGroup = AirSupportGroup.get_by_id(group_id)
         channel: discord.TextChannel = self.client.get_channel(channel_id)
         if group:
-            message = await channel.fetch_message(group.message_id)
+            message = await self.get_message(channel, group.message_id)
             if message:
                 await message.delete()
 
