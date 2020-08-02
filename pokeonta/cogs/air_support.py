@@ -204,11 +204,13 @@ class AirSupportCog(Cog):
                 await message.remove_reaction(reaction.emoji, reaction.member)
                 return
 
+            card = self.get_trainer_card(reaction.member.id)
             await raids.send(
                 embed=Embed(
+                    card.friend_code,
                     description=(
                         f"{reaction.member.mention} would like to join {host.mention} at "
-                        f"[{group.location}]({message.jump_url}) {reaction.emoji}"
+                        f"[{group.location}]({message.jump_url}) {reaction.emoji}\nGet their friend code above."
                     )
                 )
             )
