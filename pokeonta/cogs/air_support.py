@@ -27,10 +27,13 @@ class AirSupportCog(Cog):
         """ The current time in NY. """
         return datetime.now(gettz("America/New_York"))
 
-    @Cog.command(aliases=("host", "h"))
+    @Cog.group(aliases=("host", "h"))
     async def hosting(
         self, ctx: Context, raw_time: str, raid_type: str, *, location: str
     ):
+        if ctx.invoked_subcommand:
+            return
+
         # Ensure that the user has filled out their trainer card so we can share their friend code
         if not self.is_trainer_card_complete(ctx.author):
             await ctx.send(
