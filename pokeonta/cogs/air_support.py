@@ -140,15 +140,16 @@ class AirSupportCog(Cog):
         )
         await self.delete_group(group.id, self.air_support_channel(ctx.guild).id)
 
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
         message = (
             f"{ctx.author.mention} You've canceled your raid group at {group.location} for a {group.raid_type} at "
-            f"{group.time:%-I:%M%p}\nDropping RSVPs from: "
+            f"{time:%-I:%M%p}\nDropping RSVPs from: "
             f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
         )
         if ctx.command != "cancel":
             message = (
                 f"{ctx.author.mention} Removing the group at {group.location} for a {group.raid_type} at "
-                f"{group.time:%-I:%M%p}"
+                f"{time:%-I:%M%p}"
             )
         await ctx.send(message)
 
