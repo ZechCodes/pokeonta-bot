@@ -181,8 +181,6 @@ class AirSupportCog(Cog):
         if reaction.member.bot:
             return
 
-        if reaction.emoji.name != "remote":
-            return
 
         guild: discord.Guild = self.client.get_guild(reaction.guild_id)
         if reaction.channel_id != self.air_support_channel(guild).id:
@@ -192,16 +190,29 @@ class AirSupportCog(Cog):
         message = await self.get_message(
             self.air_support_channel(guild), reaction.message_id
         )
-        if not self.is_trainer_card_complete(reaction.member):
-            await self.send_trainer_card_instructions(raids, reaction.member, 30)
-            await message.remove_reaction(reaction.emoji, reaction.member)
-            return
+        if reaction.emoji.name == "remote":
+            if not self.is_trainer_card_complete(reaction.member):
+                await self.send_trainer_card_instructions(raids, reaction.member, 30)
+                await message.remove_reaction(reaction.emoji, reaction.member)
+                return
 
-        await raids.send(
-            embed=Embed(
-                description=f"{reaction.member.mention} has [RSVP'd to a raid]({message.jump_url})"
+            remote_emoji: discord.Emoji = discord.utils.get(
+                guild.emojis, name="remote"
             )
-        )
+            await raids.send(
+                embed=Embed(
+                    description=f"{reaction.member.mention} has RSVP'd to [a raid]({message.jump_url}) {remote_emoji}"
+                )
+            )
+        elif reaction.emoji.name == "raidpass":
+            raid_pass_emoji: discord.Emoji = discord.utils.get(
+                guild.emojis, name="raidpass"
+            )
+            await raids.send(
+                embed=Embed(
+                    description=f"{reaction.member.mention} will be at [the raid]({message.jump_url}) {raid_pass_emoji}"
+                )
+            )
 
     async def get_message(
         self, channel: discord.TextChannel, message_id: int
