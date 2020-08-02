@@ -78,7 +78,9 @@ class AirSupportCog(Cog):
             await ctx.send("Group was already canceled and was never created")
             return
 
-        rsvps = list(filter(lambda rsvp: not rsvp.bot, await self.get_rsvps(group, ctx.guild)))
+        rsvps = list(
+            filter(lambda rsvp: not rsvp.bot, await self.get_rsvps(group, ctx.guild))
+        )
         await self.delete_group(group.id, self.air_support_channel(ctx.guild).id)
         await ctx.send(
             f"{ctx.author.mention} You've canceled your raid group at {group.location} for a {group.raid_type} at "
@@ -113,14 +115,12 @@ class AirSupportCog(Cog):
         return group
 
     async def create_group_invite_message(
-        self,
-        host: discord.Member,
-        time: datetime,
-        raid_type: str,
-        location: str,
+        self, host: discord.Member, time: datetime, raid_type: str, location: str,
     ) -> discord.Message:
         card = self.get_trainer_card(host.id)
-        remote_emoji: discord.Emoji = discord.utils.get(host.guild.emojis, name="remote")
+        remote_emoji: discord.Emoji = discord.utils.get(
+            host.guild.emojis, name="remote"
+        )
         message = await self.air_support_channel(host.guild).send(
             card.friend_code,
             embed=(
@@ -130,14 +130,14 @@ class AirSupportCog(Cog):
                         f"Time: {time:%-I:%M%p}\n"
                         f"Raid: {raid_type}\n"
                     ),
-                    title=f"@{host.display_name} is hosting a raid group!"
+                    title=f"@{host.display_name} is hosting a raid group!",
                 )
                 .add_field(
                     name="How To Join",
                     value=(
                         f"- React with {remote_emoji} to request an invite.\n"
                         f"- Add {host.mention} as a friend using their friend code above."
-                    )
+                    ),
                 )
                 .set_thumbnail(url=remote_emoji.url)
             ),
@@ -164,7 +164,9 @@ class AirSupportCog(Cog):
             AirSupportGroup.location == location.casefold(),
         )
 
-    async def get_rsvps(self, group: AirSupportGroup, guild: discord.Guild) -> List[discord.Member]:
+    async def get_rsvps(
+        self, group: AirSupportGroup, guild: discord.Guild
+    ) -> List[discord.Member]:
         channel = self.air_support_channel(guild)
         message = await channel.fetch_message(group.message_id)
         emoji = discord.utils.get(message.guild.emojis, name="remote")
@@ -211,8 +213,7 @@ class AirSupportCog(Cog):
             return
 
         hour, minute, duration = map(
-            lambda value: int(value) if value else 0,
-            match.groups()
+            lambda value: int(value) if value else 0, match.groups()
         )
 
         # Is it a time?
@@ -228,7 +229,13 @@ class AirSupportCog(Cog):
 
     def schedule_expiration(self, group: AirSupportGroup, channel: discord.TextChannel):
         when = (group.time + timedelta(minutes=45)) - self.now
-        schedule("air-support-group-invite", when, self.delete_group, group.get_id(), channel.id)
+        schedule(
+            "air-support-group-invite",
+            when,
+            self.delete_group,
+            group.get_id(),
+            channel.id,
+        )
 
     async def send_trainer_card_instructions(
         self,
