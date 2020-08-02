@@ -15,6 +15,7 @@ import re
 
 class Colors:
     GREEN = 0x00AA44
+    YELLOW = 0xCC9900
 
 
 class AirSupportCog(Cog):
