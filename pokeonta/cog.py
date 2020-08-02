@@ -3,9 +3,10 @@ from pokeonta.logging import get_logger
 from discord.ext import commands
 from discord import Client
 from typing import Any
+from pokeonta.tags import TaggableMeta
 
 
-class Cog(commands.Cog):
+class Cog(commands.Cog, metaclass=TaggableMeta):
     def __init__(self, client: Client):
         self.client = client
         self.logger = get_logger(("pokeonta", self.__class__.__name__))
