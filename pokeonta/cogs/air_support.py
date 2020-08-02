@@ -56,11 +56,21 @@ class AirSupportCog(Cog):
             )
             return
 
+        raid_type = self.map_raid_type(raid_type, ctx.guild)
+
         message = await self.create_group_invite_message(
             ctx.author, time, raid_type, location
         )
         group = self.create_group(ctx.author, time, raid_type, location, message)
         self.schedule_expiration(group, message.channel)
+
+        await ctx.send(
+            embed=discord.Embed(
+                color=Colors.GREEN,
+                description=f"{ctx.author.mention} is hosting a {raid_type} raid! You can join him "
+                            f"[here]({message.jump_url})."
+            )
+        )
 
     # Helper Functions
 
@@ -151,6 +161,23 @@ class AirSupportCog(Cog):
             return False
 
         return True
+
+    def map_raid_type(self, raid_type: str, guild: discord.Guild) -> str:
+        raid_map = {
+            "5*": "legendary",
+            "legendary": "legendary",
+            "leg": "legendary",
+            "rayquaza": "rayquaza",
+            "ray": "rayquaza",
+            "rayray": "rayquaza",
+        }
+        emoji = discord.utils.get(
+            guild.emojis, name=raid_map.get(raid_type.casefold(), raid_type.casefold())
+        )
+        if not emoji:
+            return raid_type
+
+        return emoji
 
     def parse_time(self, time_string: str) -> Optional[datetime]:
         match = re.match(r"^(?:(\d{1,2}?)[^\d]*(\d{2})|(\d+))$", time_string.strip())
