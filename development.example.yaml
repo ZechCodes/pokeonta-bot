@@ -1,0 +1,22 @@
+bot:
+  prefix: "d!"
+  token: ""
+
+cogs:
+  devcog: true
+
+database:
+  name: "bpydb"
+  user: "postgresadmin"
+  host: "0.0.0.0"
+  port: "5432"
+  pass: "dev-env-password-safe-to-be-public"
+
+logging:
+  format: "DEV %(asctime)s: %(levelname)-9s %(name)-16s :: %(message)s"
+  level: DEBUG
+  global_level: INFO
+  loggers:
+    discord.client: ERROR
+    discord.state: ERROR
+    discord.gateway: ERROR
