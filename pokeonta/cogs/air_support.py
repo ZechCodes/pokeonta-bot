@@ -122,7 +122,7 @@ class AirSupportCog(Cog):
             embed=Embed(
                 color=Colors.GREEN,
                 description=(
-                    f"{ctx.author.mention} is hosting a {raid_type} raid! You can join him "
+                    f"{ctx.author.mention} is hosting a {raid_type} raid! You can join them "
                     f"[here]({message.jump_url})."
                 ),
             )
