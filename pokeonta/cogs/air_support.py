@@ -198,6 +198,7 @@ class AirSupportCog(Cog):
             self.air_support_channel(guild), reaction.message_id
         )
         time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
+        raid_type = group.raid_type[1:group.raid_type.find(":")] if group.raid_type.startswith("<") else group.raid_type
         if reaction.emoji.name == "remote":
             if not self.is_trainer_card_complete(reaction.member):
                 await self.send_trainer_card_instructions(raids, reaction.member, 30)
@@ -210,7 +211,7 @@ class AirSupportCog(Cog):
                 embed=discord.Embed(
                     description=f"{reaction.member.mention} would like to join, get their friend code above"
                 ).set_author(
-                    name=f"{group.raid_type} - {group.location} @ {time:%-I:%M%p}",
+                    name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
                     icon_url=reaction.emoji.url,
                     url=message.jump_url
                 )
@@ -220,7 +221,7 @@ class AirSupportCog(Cog):
                 embed=discord.Embed(
                     description=f"{reaction.member.mention} will be joining"
                 ).set_author(
-                    name=f"{group.raid_type} - {group.location} @ {time:%-I:%M%p}",
+                    name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
                     icon_url=reaction.emoji.url,
                     url=message.jump_url
                 )
