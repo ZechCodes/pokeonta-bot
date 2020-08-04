@@ -155,27 +155,7 @@ class AirSupportCog(Cog):
 
     @Cog.command(aliases=("invite", "i", "I"))
     async def invites(self, ctx: Context, *, location: str):
-        group = self.get_group(ctx.author, location)
-        if not group:
-            await ctx.send("Couldn't find a group for that location")
-            return
-
-        message = []
-        rsvps = filter(
-            lambda rsvp: not rsvp.bot, await self.get_rsvps(group, ctx.guild)
-        )
-        for rsvp in rsvps:
-            card = self.get_trainer_card(rsvp.id)
-            message.append(f"{rsvp.mention} - IGN: *{card.trainer_name}*")
-
-        await ctx.send(
-            ctx.author.mention,
-            embed=Embed(
-                description="\n".join(message) if message else "*No RSVPs Found*",
-                title=f"RSVPs for {group.location}",
-                color=Colors.GREEN,
-            ),
-        )
+        await self.send_invites_list(ctx.author, ctx.channel, location)
 
     @Cog.listener()
     async def on_raw_reaction_add(self, reaction: discord.RawReactionActionEvent):
@@ -387,6 +367,29 @@ class AirSupportCog(Cog):
             self.delete_group,
             group.get_id(),
             channel.id,
+        )
+
+    async def send_invites_list(self, host: discord.Member, channel: discord.TextChannel, location: str, send_tag: bool = True):
+        group = self.get_group(host, location)
+        if not group:
+            await channel.send("Couldn't find a group for that location")
+            return
+
+        message = []
+        rsvps = filter(
+            lambda rsvp: not rsvp.bot, await self.get_rsvps(group, channel.guild)
+        )
+        for rsvp in rsvps:
+            card = self.get_trainer_card(rsvp.id)
+            message.append(f"{rsvp.mention} - IGN: *{card.trainer_name}*")
+
+        await channel.send(
+            host.mention if send_tag else "",
+            embed=Embed(
+                description="\n".join(message) if message else "*No RSVPs Found*",
+                title=f"RSVPs for {group.location}",
+                color=Colors.GREEN,
+            ),
         )
 
     async def send_trainer_card_instructions(
