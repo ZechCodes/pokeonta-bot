@@ -27,6 +27,23 @@ class TrainerCards(Cog):
         await ctx.send(f"Here is your updated trainer card")
         await self.show_trainer_card(ctx.author, ctx.channel)
 
+    @trainer.command(aliases=["u"])
+    async def update(self, ctx: commands.Context, member: discord.Member, ign: str, *, friend_code: Optional[str] = ""):
+        if not ctx.author.permissions.manage_messages:
+            return
+
+        friend_code = re.sub(r"[^\d]", "", friend_code)
+        card = self.get_trainer_card(member.id)
+        if not card:
+            card = TrainerCardsModel(user_id=member.id, trainer_name=ign, friend_code=friend_code)
+        else:
+            card.name = ign
+            card.friend_code = friend_code
+        card.save()
+
+        await ctx.send(f"Here is {member.mention}'s updated trainer card")
+        await self.show_trainer_card(ctx.author, ctx.channel)
+
     @trainer.command(aliases=("h", "?"))
     async def help(self, ctx: commands.Context):
         await ctx.send(
@@ -68,7 +85,8 @@ class TrainerCards(Cog):
             .add_field(
                 name="Tips",
                 value=(
-                    "You can shorten the command from `!trainer` to `!t` ;)"
+                    "You can shorten the command from `!trainer` to `!t` ;)\n"
+                    "Mods can use `!trainer update @member trainer code`"
                 ),
                 inline=False
             )
