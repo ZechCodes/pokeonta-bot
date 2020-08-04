@@ -193,11 +193,11 @@ class AirSupportCog(Cog):
         if reaction.emoji.name not in {"raidpass", "remote"}:
             return
 
-        host = guild.get_member(group.host_id)
         raids = discord.utils.get(guild.channels, name="raids")
         message = await self.get_message(
             self.air_support_channel(guild), reaction.message_id
         )
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
         if reaction.emoji.name == "remote":
             if not self.is_trainer_card_complete(reaction.member):
                 await self.send_trainer_card_instructions(raids, reaction.member, 30)
@@ -207,20 +207,22 @@ class AirSupportCog(Cog):
             card = self.get_trainer_card(reaction.member.id)
             await raids.send(
                 card.friend_code,
-                embed=Embed(
-                    description=(
-                        f"{reaction.member.mention} would like to join {host.mention} at "
-                        f"[{group.location}]({message.jump_url}) {reaction.emoji}\nGet their friend code above."
-                    )
+                embed=discord.Embed(
+                    description=f"{reaction.member.mention} would like to join, get their friend code above"
+                ).set_author(
+                    name=f"{group.raid_type} - {group.location} @ {time:%-I:%M%p}",
+                    icon_url=reaction.emoji.url,
+                    url=message.jump_url
                 )
             )
         elif reaction.emoji.name == "raidpass":
             await raids.send(
-                embed=Embed(
-                    description=(
-                        f"{reaction.member.mention} will be joining {host.mention} at "
-                        f"[{group.location}]({message.jump_url}) {reaction.emoji}"
-                    )
+                embed=discord.Embed(
+                    description=f"{reaction.member.mention} will be joining"
+                ).set_author(
+                    name=f"{group.raid_type} - {group.location} @ {time:%-I:%M%p}",
+                    icon_url=reaction.emoji.url,
+                    url=message.jump_url
                 )
             )
 
