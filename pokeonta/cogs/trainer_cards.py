@@ -29,7 +29,7 @@ class TrainerCards(Cog):
 
     @trainer.command(aliases=["u"])
     async def update(self, ctx: commands.Context, member: discord.Member, ign: str, *, friend_code: Optional[str] = ""):
-        if not ctx.author.permissions.manage_messages:
+        if not ctx.author.guild_permissions.manage_messages:
             return
 
         friend_code = re.sub(r"[^\d]", "", friend_code)
