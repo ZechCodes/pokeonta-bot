@@ -154,16 +154,24 @@ class AirSupportCog(Cog):
         if not group:
             return
 
-        if reaction.emoji.name not in {"raidpass", "remote"}:
+        if reaction.emoji.name not in {"raidpass", "remote", "🚫", "ℹ️"}:
             return
 
+        host: discord.Member = guild.get_member(group.host_id)
         raids = discord.utils.get(guild.channels, name="raids")
         message = await self.get_message(
             self.air_support_channel(guild), reaction.message_id
         )
         time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
         raid_type = group.raid_type[2:group.raid_type.rfind(":")] if group.raid_type.startswith("<") else group.raid_type
-        if reaction.emoji.name == "remote":
+        if reaction.emoji.name == "ℹ️":
+            await self.send_invites_list(host, raids, group.location, False)
+            await message.remove_reaction(reaction.emoji, reaction.member)
+        elif reaction.emoji.name == "🚫":
+            if reaction.member == host or reaction.member.guild_permissions.manage_messages:
+                await self.cancel_group(raids, group, False)
+            await message.remove_reaction(reaction.emoji, reaction.member)
+        elif reaction.emoji.name == "remote":
             if not self.is_trainer_card_complete(reaction.member):
                 await self.send_trainer_card_instructions(raids, reaction.member, 30)
                 await message.remove_reaction(reaction.emoji, reaction.member)
@@ -255,19 +263,16 @@ class AirSupportCog(Cog):
             card.friend_code,
             embed=(
                 Embed(
-                    description=(
-                        f"Location: {location}\n"
-                        f"Time: {time:%-I:%M%p}\n"
-                        f"Raid: {raid_type}\n"
-                    ),
-                    title=f"@{host.display_name} is hosting a raid group!",
+                    description=f"Friend {host.mention} using their code above.",
+                    title=f"{raid_type} - {location} @ {time:%-I:%M%p}",
                 )
                 .add_field(
-                    name="How To Join",
+                    name="Commands",
                     value=(
-                        f"- React with {remote_emoji} to request an invite.\n"
-                        f"- React with {raid_pass_emoji} if you're doing it and don't need an invite.\n"
-                        f"- Add {host.mention} as a friend using their friend code above."
+                        f"{remote_emoji} Request invite **|** "
+                        f"{raid_pass_emoji} You're coming\n"
+                        f"ℹ️ See RSVPs **|** "
+                        f"🚫 End the group"
                     ),
                 )
                 .set_thumbnail(url=remote_emoji.url)
@@ -275,6 +280,8 @@ class AirSupportCog(Cog):
         )
         await message.add_reaction(remote_emoji)
         await message.add_reaction(raid_pass_emoji)
+        await message.add_reaction("ℹ️")
+        await message.add_reaction("🚫")
         return message
 
     @tag("schedule", "delete-air-support-group")
