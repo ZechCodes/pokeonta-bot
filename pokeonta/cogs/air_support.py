@@ -110,11 +110,11 @@ class AirSupportCog(Cog):
             )
             return
 
-        raid_type = self.map_raid_type(raid_type, ctx.guild)
-
         message = await self.create_group_invite_message(
             ctx.author, time, raid_type, location
         )
+
+        raid_type = self.map_raid_type(raid_type, ctx.guild)
         group = self.create_group(ctx.author, time, raid_type, location, message)
         self.schedule_expiration(group, message.channel)
 
