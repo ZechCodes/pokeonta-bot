@@ -20,7 +20,7 @@ class TrainerCards(Cog):
         if not card:
             card = TrainerCardsModel(user_id=ctx.author.id, trainer_name=ign, friend_code=friend_code)
         else:
-            card.name = ign
+            card.trainer_name = ign
             card.friend_code = friend_code
         card.save()
 
@@ -37,7 +37,7 @@ class TrainerCards(Cog):
         if not card:
             card = TrainerCardsModel(user_id=member.id, trainer_name=ign, friend_code=friend_code)
         else:
-            card.name = ign
+            card.trainer_name = ign
             card.friend_code = friend_code
         card.save()
 
