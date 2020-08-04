@@ -153,7 +153,7 @@ class AirSupportCog(Cog):
             )
         await ctx.send(message)
 
-    @Cog.command(aliases=("invite", "i"))
+    @Cog.command(aliases=("invite", "i", "I"))
     async def invites(self, ctx: Context, *, location: str):
         group = self.get_group(ctx.author, location)
         if not group:
