@@ -135,23 +135,7 @@ class AirSupportCog(Cog):
             await ctx.send("Group was already canceled or was never created")
             return
 
-        rsvps = list(
-            filter(lambda rsvp: not rsvp.bot, await self.get_rsvps(group, ctx.guild))
-        )
-        await self.delete_group(group.id, self.air_support_channel(ctx.guild).id)
-
-        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
-        message = (
-            f"{ctx.author.mention} You've canceled your raid group at {group.location} for a {group.raid_type} at "
-            f"{time:%-I:%M%p}\nDropping RSVPs from: "
-            f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
-        )
-        if ctx.command != "cancel":
-            message = (
-                f"{ctx.author.mention} Removing the group at {group.location} for a {group.raid_type} at "
-                f"{time:%-I:%M%p}"
-            )
-        await ctx.send(message)
+        await self.cancel_group(ctx.channel, group, ctx.invoked_subcommand == "cancel")
 
     @Cog.command(aliases=("invite", "i", "I"))
     async def invites(self, ctx: Context, *, location: str):
@@ -216,6 +200,28 @@ class AirSupportCog(Cog):
             return
 
     # Helper Functions
+
+    async def cancel_group(self, channel: discord.TextChannel, group: AirSupportGroup, show_invitees: bool = False):
+
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
+        message = (
+            f"Removing {group.raid_type} - {group.location} @ {time:%-I:%M%p}"
+        )
+        if show_invitees:
+            rsvps = list(
+                filter(lambda rsvp: not rsvp.bot, await self.get_rsvps(group, channel.guild))
+            )
+            message = (
+                f"Canceled {group.raid_type} - {group.raid_type} @ {time:%-I:%M%p}\nDropping RSVPs from: "
+                f"{' '.join(rsvp.mention for rsvp in rsvps) if rsvps else '*No RSVPs Found*'}"
+            )
+        await self.delete_group(group.id, self.air_support_channel(channel.guild).id)
+        await channel.send(
+            embed=discord.Embed(
+                description=message,
+                color=Colors.YELLOW
+            )
+        )
 
     def create_group(
         self,
