@@ -42,7 +42,7 @@ class TrainerCards(Cog):
         card.save()
 
         await ctx.send(f"Here is {member.mention}'s updated trainer card")
-        await self.show_trainer_card(ctx.author, ctx.channel)
+        await self.show_trainer_card(member, ctx.channel)
 
     @trainer.command(aliases=("h", "?"))
     async def help(self, ctx: commands.Context):
