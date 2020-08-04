@@ -198,7 +198,7 @@ class AirSupportCog(Cog):
             self.air_support_channel(guild), reaction.message_id
         )
         time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
-        raid_type = group.raid_type[1:group.raid_type.find(":")] if group.raid_type.startswith("<") else group.raid_type
+        raid_type = group.raid_type[2:group.raid_type.rfind(":")] if group.raid_type.startswith("<") else group.raid_type
         if reaction.emoji.name == "remote":
             if not self.is_trainer_card_complete(reaction.member):
                 await self.send_trainer_card_instructions(raids, reaction.member, 30)
