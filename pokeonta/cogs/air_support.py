@@ -71,7 +71,7 @@ class AirSupportCog(Cog):
             )
         )
 
-    @Cog.group(aliases=("host", "h"))
+    @Cog.group(aliases=("host", "h", "Hosting", "Host", "H"))
     async def hosting(
         self,
         ctx: Context,
