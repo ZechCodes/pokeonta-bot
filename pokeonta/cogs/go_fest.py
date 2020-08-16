@@ -30,7 +30,7 @@ class GoFestCog(Cog):
                     "Stunfisk": False,
                     "**Durant**": True,
                 },
-                times=[10, 15]
+                times=[]
             ),
             Habitat(
                 name="Friendship",
@@ -51,7 +51,7 @@ class GoFestCog(Cog):
                     "Chimecho": False,
                     "**Woobat**": True
                 },
-                times=[11, 16]
+                times=[13]
             ),
             Habitat(
                 name="Fire",
@@ -71,7 +71,7 @@ class GoFestCog(Cog):
                     "Litwick": False,
                     "**Heatmor**": True
                 },
-                times=[12, 17]
+                times=[11]
             ),
             Habitat(
                 name="Water",
@@ -91,7 +91,7 @@ class GoFestCog(Cog):
                     "Tympole": False,
                     "Alomomola": False
                 },
-                times=[13, 18]
+                times=[12]
             ),
             Habitat(
                 name="Grass",
@@ -112,7 +112,7 @@ class GoFestCog(Cog):
                     "Foongus": False,
                     "Ferroseed": False
                 },
-                times=[14, 19]
+                times=[]
             )
         ]
 
@@ -124,6 +124,9 @@ class GoFestCog(Cog):
     async def ready(self):
         if datetime.datetime.utcnow() - datetime.timedelta(hours=4) < datetime.datetime(2020, 7, 25, 20, 0, 0, 0):
             self.logger.debug("Scheduling habitat change")
+            asyncio.get_event_loop().create_task(self.schedule_habitat_change())
+        elif datetime.datetime.utcnow() - datetime.timedelta(hours=4) < datetime.datetime(2020, 8, 16, 20, 0, 0, 0):
+            self.logger.debug("Scheduling make up habitat change")
             asyncio.get_event_loop().create_task(self.schedule_habitat_change())
 
     async def schedule_habitat_change(self):
