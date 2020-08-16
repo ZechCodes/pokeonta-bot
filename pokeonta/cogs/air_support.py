@@ -169,6 +169,7 @@ class AirSupportCog(Cog):
         )
         time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
         raid_type = group.raid_type[2:group.raid_type.rfind(":")] if group.raid_type.startswith("<") else group.raid_type
+        trainer = self.get_trainer_card(reaction.member.id)
         if reaction.emoji.name == "ℹ️":
             await self.send_invites_list(host, raids, group.location, False)
             await message.remove_reaction(reaction.emoji, reaction.member)
@@ -184,9 +185,10 @@ class AirSupportCog(Cog):
 
             card = self.get_trainer_card(reaction.member.id)
             await raids.send(
-                card.friend_code,
+                f"{card.friend_code} - {trainer.trainer_name}'s Friend Code",
                 embed=discord.Embed(
-                    description=f"{reaction.member.mention} would like to join, get their friend code above"
+                    description=f"{reaction.member.mention} ({trainer.trainer_name}) would like to join, get their "
+                                f"friend code above"
                 ).set_author(
                     name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
                     icon_url=reaction.emoji.url,
