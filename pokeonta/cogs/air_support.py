@@ -198,7 +198,7 @@ class AirSupportCog(Cog):
         elif reaction.emoji.name == "raidpass":
             await raids.send(
                 embed=discord.Embed(
-                    description=f"{reaction.member.mention} will be joining"
+                    description=f"{reaction.member.mention} ({trainer.trainer_name}) will be joining"
                 ).set_author(
                     name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
                     icon_url=reaction.emoji.url,
