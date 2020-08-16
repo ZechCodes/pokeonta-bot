@@ -22,7 +22,7 @@ class Colors:
 class Embed(discord.Embed):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_footer(text="!hosting time pokemon/level location")
+        self.set_footer(text="!raid pull_time raid_type location")
 
 
 class AirSupportCog(Cog):
@@ -42,20 +42,21 @@ class AirSupportCog(Cog):
         emoji = discord.utils.get(ctx.guild.emojis, name="remote")
         await ctx.message.delete()
         await channel.send(
-            embed=discord.Embed(color=Colors.BLUE, title="Remote Raid Hosting")
+            embed=discord.Embed(color=Colors.BLUE, title="Raid Reporting")
             .add_field(
-                name="Hosting A Raid",
+                name="Reporting A Raid",
                 value=(
-                    "You can broadcast that you can invite people to a raid using the `!hosting` command.```\n!hosting "
-                    "15 Gible Vander\n!hosting 1:30 Rayquaza Fire Dog\n!hosting 12:00 5* Elm Park Gym\n```\n*Example "
-                    "1:* a Gible raid at vander in 15 minutes\n*Example 2:* Rayquaza raid at Fire Dog at 1:30\n*Example"
-                    " 3:* Elm Park for a legendary with a 12 o'clock pull."
+                    "You can report a raid using the `!raid` command.```\n!raid 15 Gible Vander\n!raid 1:30 Rayquaza"
+                    " Fire Dog\n!raid 12:00 5* Elm Park Gym\n```\n*Example 1:* a Gible raid at vander in 15 minutes\n"
+                    "*Example 2:* Rayquaza raid at Fire Dog at 1:30\n*Example 3:* Elm Park for a legendary with a 12 "
+                    "o'clock pull."
                 ),
                 inline=False,
             )
             .add_field(
                 name="Seeing Invites",
-                value="You can see who has requested an invite using the `!invites` command:```\n!invites Vander\n```",
+                value="You can see who has requested an invite to a raid using the `!invites` command:"
+                      "```\n!invites Vander\n```",
                 inline=False,
             )
             .add_field(
@@ -71,7 +72,7 @@ class AirSupportCog(Cog):
             )
         )
 
-    @Cog.group(aliases=("host", "h", "Hosting", "Host", "H"))
+    @Cog.group(aliases=("host", "h", "Hosting", "Host", "H", "r", "R", "raid"))
     async def hosting(
         self,
         ctx: Context,
@@ -85,7 +86,8 @@ class AirSupportCog(Cog):
 
         if raid_type is None or location is None:
             await ctx.send(
-                "You must tell us what the pokemon/raid level is and the location.```\n!hosting 10 Gible Vander\n```"
+                "You must tell us what the time for the raid, the pokemon/raid level, and the location."
+                "```\n!raid 10 Gible Vander\n```"
             )
             return
 
@@ -103,10 +105,10 @@ class AirSupportCog(Cog):
             return
 
         # Ensure the location is unique for this member
-        if self.get_group(ctx.author, location):
+        if self.get_group(location):
             await ctx.send(
-                f"{ctx.author.mention} you've already created a group for `{location}`, "
-                f"if it has already ended cancel it:\n```\n!cancel {location}\n```"
+                f"{ctx.author.mention} there is already a group for  `{location}`, if it has already ended cancel it:"
+                f"\n```\n!cancel {location}\n```"
             )
             return
 
@@ -114,23 +116,26 @@ class AirSupportCog(Cog):
             ctx.author, time, raid_type, location
         )
 
-        raid_type = self.map_raid_type(raid_type, ctx.guild)
-        group = self.create_group(ctx.author, time, raid_type, location, message)
+        raid_type_emoji = self.map_raid_type(raid_type, ctx.guild)
+        group = self.create_group(ctx.author, time, raid_type_emoji, location, message)
         self.schedule_expiration(group, message.channel)
 
         await ctx.send(
             embed=Embed(
                 color=Colors.GREEN,
                 description=(
-                    f"{ctx.author.mention} is hosting a {raid_type} raid! You can join them "
-                    f"[here]({message.jump_url})."
-                ),
+                    f"{ctx.author.mention} reported a {raid_type_emoji} raid! You can join [here]({message.jump_url})."
+                )
+            ).set_author(
+                name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
+                url=message.jump_url,
+                icon_url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/ActivityLogRaidLogo.png"
             )
         )
 
     @Cog.command(aliases=("done", "d"))
     async def cancel(self, ctx: Context, *, location: str):
-        group = self.get_group(ctx.author, location)
+        group = self.get_group(location)
         if not group:
             await ctx.send("Group was already canceled or was never created")
             return
@@ -296,10 +301,9 @@ class AirSupportCog(Cog):
             group.delete_instance()
 
     def get_group(
-        self, member: discord.Member, location: str
+        self, location: str
     ) -> Optional[AirSupportGroup]:
         return AirSupportGroup.get_or_none(
-            AirSupportGroup.host_id == member.id,
             AirSupportGroup.location == location.casefold(),
         )
 
@@ -383,7 +387,7 @@ class AirSupportCog(Cog):
         )
 
     async def send_invites_list(self, host: discord.Member, channel: discord.TextChannel, location: str, send_tag: bool = True):
-        group = self.get_group(host, location)
+        group = self.get_group(location)
         if not group:
             await channel.send("Couldn't find a group for that location")
             return
