@@ -149,7 +149,7 @@ class GoFestCog(Cog):
 
     async def send_habitat_message(self, habitat: Habitat, current: bool = False):
         guild = self.client.get_guild(340162408498593793)
-        channel: discord.TextChannel = discord.utils.get(guild.channels, name="go-fest-2020")
+        channel: discord.TextChannel = discord.utils.get(guild.channels, name="go-fest-aug-16")
         embed = (
             discord.Embed(
                 title=f"We're currently in the {habitat.name} habitat" if current else f"We're now in the {habitat.name} Habitat!!!"
