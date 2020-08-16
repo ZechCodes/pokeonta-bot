@@ -6,6 +6,7 @@ cogs:
   go_fest: true
   trainer_cards: true
   air_support: true
+  gyms: true
   events: true
 
 logging:
