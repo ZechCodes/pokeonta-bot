@@ -259,6 +259,7 @@ class AirSupportCog(Cog):
     async def create_group_invite_message(
         self, host: discord.Member, time: datetime, raid_type: str, location: str,
     ) -> discord.Message:
+        raids = discord.utils.get(host.guild.channels, name="raids")
         card = self.get_trainer_card(host.id)
         remote_emoji: discord.Emoji = discord.utils.get(
             host.guild.emojis, name="remote"
@@ -281,6 +282,12 @@ class AirSupportCog(Cog):
                         f"ℹ️ See RSVPs **|** "
                         f"🚫 End the group"
                     ),
+                    inline=False
+                )
+                .add_field(
+                    name="Coordination",
+                    value=f"Discuss & coordinate in {raids.mention}",
+                    inline=False
                 )
                 .set_thumbnail(url=remote_emoji.url)
             ),
