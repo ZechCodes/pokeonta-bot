@@ -129,7 +129,7 @@ class AirSupportCog(Cog):
             ).set_author(
                 name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
                 url=message.jump_url,
-                icon_url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/ActivityLogRaidLogo.png"
+                icon_url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/tx_raid_icon.png"
             )
         )
 
