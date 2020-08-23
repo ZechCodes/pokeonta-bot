@@ -276,6 +276,7 @@ class AirSupportCog(Cog):
             host.guild.emojis, name="raidpass"
         )
         message = await self.air_support_channel(host.guild).send(
+            content=f"{host.mention} reported this raid.",
             embed=(
                 Embed(
                     title=f"{raid_type} - {location} @ {time:%-I:%M%p}",
