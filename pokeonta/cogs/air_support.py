@@ -418,9 +418,10 @@ class AirSupportCog(Cog):
             await channel.send("Couldn't find a group for that location")
             return
 
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
         embed = Embed(
             description="Here is everyone that has said they can attend:",
-            title=f"RSVPs for {group.raid_type} - {group.location} @ {group.time:%-I:%M%p}",
+            title=f"RSVPs for {group.raid_type} - {group.location} @ {time:%-I:%M%p}",
             color=Colors.GREEN,
         )
 
