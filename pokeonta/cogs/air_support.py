@@ -418,18 +418,22 @@ class AirSupportCog(Cog):
             await channel.send("Couldn't find a group for that location")
             return
 
+        embed = Embed(
+            description="Here is everyone that has said they can attend:",
+            title=f"RSVPs for {group.location}",
+            color=Colors.GREEN,
+        )
+
         message = []
         rsvps = filter(
             lambda rsvp: not rsvp.bot, await self.get_rsvps(group, channel.guild)
         )
-        for host in rsvps:
-            card = self.get_trainer_card(host.id)
-            message.append(f"{host.mention} - IGN: *{card.trainer_name}*")
-
-        embed = Embed(
-            description="\n".join(message) if message else "*No RSVPs Found*",
-            title=f"RSVPs for {group.location}",
-            color=Colors.GREEN,
+        for rsvp in rsvps:
+            card = self.get_trainer_card(rsvp.id)
+            message.append(f"{rsvp.mention} - IGN: *{card.trainer_name}*")
+        embed.add_field(
+            name="Need Invites",
+            value="\n".join(message) if message else "*No RSVPs Found*",
         )
 
         message = []
@@ -440,8 +444,8 @@ class AirSupportCog(Cog):
             card = self.get_trainer_card(host.id)
             message.append(f"{host.mention} - IGN: *{card.trainer_name}*")
         embed.add_field(
-            name="In Person RSVPs",
-            value="\n".join(message) if message else "*No Host RSVPs Found*",
+            name="Hosting",
+            value="\n".join(message) if message else "*No RSVPs Found*",
         )
 
         await channel.send(
