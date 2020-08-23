@@ -269,7 +269,6 @@ class AirSupportCog(Cog):
         self, host: discord.Member, time: datetime, raid_type: str, location: str,
     ) -> discord.Message:
         raids = discord.utils.get(host.guild.channels, name="raids")
-        card = self.get_trainer_card(host.id)
         remote_emoji: discord.Emoji = discord.utils.get(
             host.guild.emojis, name="remote"
         )
@@ -277,10 +276,8 @@ class AirSupportCog(Cog):
             host.guild.emojis, name="raidpass"
         )
         message = await self.air_support_channel(host.guild).send(
-            card.friend_code,
             embed=(
                 Embed(
-                    description=f"Friend {host.mention} using their code above.",
                     title=f"{raid_type} - {location} @ {time:%-I:%M%p}",
                 )
                 .add_field(
