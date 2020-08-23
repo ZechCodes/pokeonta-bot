@@ -336,6 +336,17 @@ class AirSupportCog(Cog):
         emoji = discord.utils.get(message.guild.emojis, name="remote")
         return await discord.utils.get(message.reactions, emoji=emoji).users().flatten()
 
+    async def get_hosts(
+        self, group: AirSupportGroup, guild: discord.Guild
+    ) -> List[discord.Member]:
+        channel = self.air_support_channel(guild)
+        message = await self.get_message(channel, group.message_id)
+        if not message:
+            return []
+
+        emoji = discord.utils.get(message.guild.emojis, name="raidpass")
+        return await discord.utils.get(message.reactions, emoji=emoji).users().flatten()
+
     def get_trainer_card(self, member_id: int) -> Optional[TrainerCards]:
         """ Gets a trainer card for a member. """
         return TrainerCards.get_or_none(TrainerCards.user_id == member_id)
@@ -411,17 +422,31 @@ class AirSupportCog(Cog):
         rsvps = filter(
             lambda rsvp: not rsvp.bot, await self.get_rsvps(group, channel.guild)
         )
-        for rsvp in rsvps:
-            card = self.get_trainer_card(rsvp.id)
-            message.append(f"{rsvp.mention} - IGN: *{card.trainer_name}*")
+        for host in rsvps:
+            card = self.get_trainer_card(host.id)
+            message.append(f"{host.mention} - IGN: *{card.trainer_name}*")
+
+        embed = Embed(
+            description="\n".join(message) if message else "*No RSVPs Found*",
+            title=f"RSVPs for {group.location}",
+            color=Colors.GREEN,
+        )
+
+        message = []
+        hosts = filter(
+            lambda host: not host.bot, await self.get_hosts(group, channel.guild)
+        )
+        for host in hosts:
+            card = self.get_trainer_card(host.id)
+            message.append(f"{host.mention} - IGN: *{card.trainer_name}*")
+        embed.add_field(
+            name="In Person RSVPs",
+            value="\n".join(message) if message else "*No Host RSVPs Found*",
+        )
 
         await channel.send(
             host.mention if send_tag else "",
-            embed=Embed(
-                description="\n".join(message) if message else "*No RSVPs Found*",
-                title=f"RSVPs for {group.location}",
-                color=Colors.GREEN,
-            ),
+            embed=embed,
         )
 
     async def send_trainer_card_instructions(
