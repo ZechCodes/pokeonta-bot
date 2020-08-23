@@ -193,7 +193,7 @@ class AirSupportCog(Cog):
             await raids.send(
                 f"{card.friend_code} - {trainer.trainer_name}'s Friend Code",
                 embed=discord.Embed(
-                    description=f"{reaction.member.mention} ({trainer.trainer_name}) would like to join, get their "
+                    description=f"{reaction.member.mention} ({trainer.trainer_name}) wants an invite, get their "
                                 f"friend code above"
                 ).set_author(
                     name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
