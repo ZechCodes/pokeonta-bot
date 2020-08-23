@@ -150,7 +150,7 @@ class AirSupportCog(Cog):
 
     @Cog.command(aliases=("invite", "i", "I"))
     async def invites(self, ctx: Context, *, location: str):
-        await self.send_invites_list(ctx.author, ctx.channel, location)
+        await self.send_invites_list(ctx.author, ctx.channel, location, False)
 
     @Cog.listener()
     async def on_raw_reaction_add(self, reaction: discord.RawReactionActionEvent):
