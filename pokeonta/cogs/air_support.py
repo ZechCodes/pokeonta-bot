@@ -120,11 +120,17 @@ class AirSupportCog(Cog):
         group = self.create_group(ctx.author, time, raid_type_emoji, location, message)
         self.schedule_expiration(group, message.channel)
 
+        raid_pass = discord.utils.get(ctx.guild.emojis, name="raidpass")
+        remote_pass = discord.utils.get(ctx.guild.emojis, name="remote")
+
         await ctx.send(
             embed=Embed(
                 color=Colors.GREEN,
                 description=(
-                    f"{ctx.author.mention} reported a {raid_type_emoji} raid! You can join [here]({message.jump_url})."
+                    f"{ctx.author.mention} reported a {raid_type_emoji} raid!."
+                    f"\n\n[On This Message]({message.jump_url}) react with:\n"
+                    f"{raid_pass} if you can invite people\n"
+                    f"{remote_pass} if you need an invite"
                 )
             ).set_author(
                 name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
