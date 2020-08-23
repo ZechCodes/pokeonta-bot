@@ -420,7 +420,7 @@ class AirSupportCog(Cog):
 
         embed = Embed(
             description="Here is everyone that has said they can attend:",
-            title=f"RSVPs for {group.location}",
+            title=f"RSVPs for {group.raid_type} - {group.location} @ {group.time:%-I:%M%p}",
             color=Colors.GREEN,
         )
 
