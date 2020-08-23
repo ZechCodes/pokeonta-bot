@@ -196,7 +196,7 @@ class AirSupportCog(Cog):
                     description=f"{reaction.member.mention} ({trainer.trainer_name}) wants an invite, get their "
                                 f"friend code above"
                 ).set_author(
-                    name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
+                    name=f"{raid_type.title()} - {group.location.title()} @ {time:%-I:%M%p}",
                     icon_url=reaction.emoji.url,
                     url=message.jump_url
                 )
@@ -209,7 +209,7 @@ class AirSupportCog(Cog):
                     description=f"{reaction.member.mention} ({trainer.trainer_name}) will be joining and can invite, "
                                 f"get their friend code above"
                 ).set_author(
-                    name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
+                    name=f"{raid_type.title()} - {group.location.title()} @ {time:%-I:%M%p}",
                     icon_url=reaction.emoji.url,
                     url=message.jump_url
                 )
@@ -422,7 +422,7 @@ class AirSupportCog(Cog):
         time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
         embed = Embed(
             description="Here is everyone that has said they can attend:",
-            title=f"RSVPs for {group.raid_type} - {group.location} @ {time:%-I:%M%p}",
+            title=f"RSVPs for {group.raid_type.title()} - {group.location.title()} @ {time:%-I:%M%p}",
             color=Colors.GREEN,
         )
 
