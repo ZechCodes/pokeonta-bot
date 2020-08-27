@@ -300,7 +300,7 @@ class AirSupportCog(Cog):
             ),
         )
         await message.add_reaction(remote_emoji)
-        await message.add_reaction(raid_pass…_emoji)
+        await message.add_reaction(raid_pass_emoji)
         await message.add_reaction("ℹ️")
         await message.add_reaction("🚫")
         return message
