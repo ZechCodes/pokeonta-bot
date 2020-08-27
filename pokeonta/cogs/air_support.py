@@ -300,7 +300,7 @@ class AirSupportCog(Cog):
             ),
         )
         await message.add_reaction(remote_emoji)
-        await message.add_reaction(raid_pass_emoji)
+        await message.add_reaction(raid_pass…_emoji)
         await message.add_reaction("ℹ️")
         await message.add_reaction("🚫")
         return message
@@ -434,7 +434,7 @@ class AirSupportCog(Cog):
             card = self.get_trainer_card(rsvp.id)
             message.append(f"{rsvp.mention} - IGN: *{card.trainer_name}*")
         embed.add_field(
-            name="Need Invites",
+            name=f"Need Invites ({len(message)})",
             value="\n".join(message) if message else "*No RSVPs Found*",
         )
 
@@ -446,7 +446,7 @@ class AirSupportCog(Cog):
             card = self.get_trainer_card(host.id)
             message.append(f"{host.mention} - IGN: *{card.trainer_name}*")
         embed.add_field(
-            name="Hosting",
+            name=f"Hosting ({len(message)})",
             value="\n".join(message) if message else "*No RSVPs Found*",
         )
 
