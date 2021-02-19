@@ -146,10 +146,8 @@ class KantoCelebrationCog(Cog):
 
     async def schedule_habitat_change(self):
         now = datetime.datetime.utcnow() - datetime.timedelta(hours=5)
+        next_change = now.replace(hour=now.hour + 1, minute=0, second=0, microsecond=0)
         if now > datetime.datetime(2021, 2, 20, 7, 0, 0, 0):
-            next_change = now.replace(
-                hour=now.hour + 1, minute=0, second=0, microsecond=0
-            )
             self.logger.debug(
                 f"Next location change in {(next_change - now).seconds} for hour {now.hour + 1}"
             )
@@ -157,14 +155,14 @@ class KantoCelebrationCog(Cog):
 
             await self.send_habitat_change(now.hour + 1)
 
+            if now + datetime.timedelta(hours=2) < datetime.datetime(
+                2021, 2, 20, 20, 0, 0, 0
+            ):
+                await asyncio.sleep(60)
+                asyncio.get_event_loop().create_task(self.schedule_habitat_change())
         else:
             self.logger.debug(f"Too early to show a location")
-
-        if now + datetime.timedelta(hours=2) < datetime.datetime(
-            2021, 2, 20, 20, 0, 0, 0
-        ):
-            await asyncio.sleep(60)
-            asyncio.get_event_loop().create_task(self.schedule_habitat_change())
+            await asyncio.sleep((next_change - now).seconds)
 
     async def send_habitat_change(self, hour: int, current: bool = False):
         self.logger.debug(f"Looking for location in hour {hour}")
