@@ -8,6 +8,7 @@ cogs:
   air_support: true
   gyms: true
   events: true
+  kanto_celebration: true
 
 logging:
   format: "%(asctime)s: %(levelname)-9s %(name)-16s :: %(message)s"
