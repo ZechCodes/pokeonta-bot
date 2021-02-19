@@ -77,11 +77,11 @@ class KantoCelebrationCog(Cog):
                 nick = nick.replace(emoji, "")
                 await ctx.author.remove_roles(role)
                 message = f"{ctx.author.mention} you've been removed from {version.capitalize()}"
-            elif version == "red":
+            elif version.lower() == "red":
                 await ctx.author.remove_roles(green)
                 await ctx.author.add_roles(red)
                 nick = "🔴" + nick.replace("🟢", "")
-            elif version == "green":
+            elif version.lower() == "green":
                 await ctx.author.remove_roles(red)
                 await ctx.author.add_roles(green)
                 nick = "🟢" + nick.replace("🔴", "")
