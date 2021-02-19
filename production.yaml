@@ -3,7 +3,7 @@ bot:
   status: "for pokemon"
 
 cogs:
-  go_fest: true
+  go_fest: false
   trainer_cards: true
   air_support: true
   gyms: true
