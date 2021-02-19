@@ -71,7 +71,7 @@ class KantoCelebrationCog(Cog):
                 discord.utils.get(ctx.guild.roles, name="red"),
                 discord.utils.get(ctx.guild.roles, name="green"),
             )
-            role = red if version == "red" else green
+            role = red if version.lower() == "red" else green
             nick = ctx.author.display_name
             if role in ctx.author.roles:
                 nick = nick.replace(emoji, "")
