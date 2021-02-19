@@ -14,32 +14,87 @@ class KantoCelebrationCog(Cog):
         self.hourly_features = [
             Habitat(
                 name="Pallet Town",
-                pokemon={},
+                pokemon=[
+                    "Bulbasaur",
+                    "Charmander",
+                    "Squirtle",
+                    "Caterpie",
+                    "Weedle",
+                    "Pidgey",
+                    "Rattata",
+                    "Spearow",
+                    "Pikachu",
+                    "Zubat",
+                ],
                 times=[9, 14],
             ),
             Habitat(
                 name="Pewter City",
-                pokemon={},
+                pokemon=[
+                    "Nidoran ♀",
+                    "Nidoran ♂",
+                    "Clefairy",
+                    "Paras",
+                    "Diglett",
+                    "Geodude",
+                    "Magnemite",
+                    "Onix",
+                    "Voltorb",
+                    "Rhyhorn",
+                ],
                 times=[10, 15],
             ),
             Habitat(
                 name="Cerulean City",
-                pokemon={},
+                pokemon=[
+                    "Jigglypuff",
+                    "Psyduck",
+                    "Poliwag",
+                    "Tentacool",
+                    "Shellder",
+                    "Krabby",
+                    "Horsea",
+                    "Goldeen",
+                    "Staryu",
+                    "Magikarp",
+                ],
                 times=[11, 16],
             ),
             Habitat(
                 name="Fuschia City",
-                pokemon={},
+                pokemon=[
+                    "Venonat",
+                    "Abra",
+                    "Ponyta",
+                    "Grimer",
+                    "Gastly",
+                    "Drowzee",
+                    "Exeggcute",
+                    "Koffing",
+                    "Omanyte",
+                    "Kabuto",
+                ],
                 times=[12, 17],
             ),
             Habitat(
                 name="Pokemon League",
-                pokemon={},
+                pokemon=[
+                    "Machop",
+                    "Slowpoke",
+                    "Doduo",
+                    "Seel",
+                    "Hitmonlee",
+                    "Hitmonchan",
+                    "Jynx",
+                    "Eevee",
+                    "Porygon",
+                    "Dratini",
+                ],
                 times=[13, 18],
             ),
             Habitat(
                 name="All Areas",
-                pokemon={},
+                pokemon=["*ALL POKEMON*"],
                 times=[19],
             ),
         ]
@@ -122,26 +177,17 @@ class KantoCelebrationCog(Cog):
             if current
             else f"We're now in {habitat.name}!!!"
         ).add_field(
-            name="Featured Shinies!!!",
-            value=", ".join(
-                filter(lambda pokemon: habitat.pokemon[pokemon], habitat.pokemon)
-            ),
+            name="Featured Pokemon!!!",
+            value=", ".join(habitat.pokemon),
             inline=False,
         )
-        other = list(
-            filter(lambda pokemon: not habitat.pokemon[pokemon], habitat.pokemon)
-        )
-        if other:
-            embed.add_field(
-                name="Other Featured Pokemon", value=", ".join(other), inline=False
-            )
         await channel.send(embed=embed)
 
 
 @dataclass()
 class Habitat:
     name: str
-    pokemon: Dict[str, bool]
+    pokemon: List[str]
     times: List[int]
 
 
