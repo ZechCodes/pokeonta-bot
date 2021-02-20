@@ -11,6 +11,24 @@ import discord
 class KantoCelebrationCog(Cog):
     def __init__(self, client):
         super().__init__(client)
+        self.exclusives = {
+            "red": (
+                "Ekans",
+                "Oddish",
+                "Mankey",
+                "Growlithe",
+                "Scyther",
+                "Electabuzz",
+            ),
+            "green": (
+                "Sandshrew",
+                "Vulpix",
+                "Meowth",
+                "Bellsprout",
+                "Magmar",
+                "Pinsir",
+            ),
+        }
         self.hourly_features = [
             Habitat(
                 name="Pallet Town",
@@ -175,17 +193,45 @@ class KantoCelebrationCog(Cog):
     async def send_habitat_message(self, habitat: Habitat, current: bool = False):
         guild = self.client.get_guild(340162408498593793)
         channel: discord.TextChannel = discord.utils.get(
-            guild.channels, name="kanto-celebration"
+            guild.channels, name="testing-bot"
+        )
+        red = sorted(
+            pokemon for pokemon in habitat.pokemon if pokemon in self.exclusives["red"]
+        )
+        green = sorted(
+            pokemon
+            for pokemon in habitat.pokemon
+            if pokemon in self.exclusives["green"]
+        )
+        remaining = sorted(
+            pokemon
+            for pokemon in habitat.pokemon
+            if pokemon not in self.exclusives["green"]
+            and pokemon not in self.exclusives["red"]
         )
         embed = discord.Embed(
             title=f"We're currently in {habitat.name}"
             if current
             else f"We're now in {habitat.name}!!!"
-        ).add_field(
-            name="Featured Pokemon!!!",
-            value=", ".join(habitat.pokemon),
-            inline=False,
         )
+        if red:
+            embed.add_field(
+                name="🔴 Red Exclusives 🔴!!!",
+                value=", ".join(red),
+                inline=False,
+            )
+        if green:
+            embed.add_field(
+                name="🟢 Green Exclusives 🟢!!!",
+                value=", ".join(green),
+                inline=False,
+            )
+        if remaining:
+            embed.add_field(
+                name="⚪️ Featured Pokemon ⚪️!!!",
+                value=", ".join(remaining),
+                inline=False,
+            )
         await channel.send(embed=embed)
 
 
