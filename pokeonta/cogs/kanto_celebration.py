@@ -193,7 +193,7 @@ class KantoCelebrationCog(Cog):
     async def send_habitat_message(self, habitat: Habitat, current: bool = False):
         guild = self.client.get_guild(340162408498593793)
         channel: discord.TextChannel = discord.utils.get(
-            guild.channels, name="testing-bot"
+            guild.channels, name="kanto-celebration"
         )
         red = sorted(
             pokemon for pokemon in habitat.pokemon if pokemon in self.exclusives["red"]
