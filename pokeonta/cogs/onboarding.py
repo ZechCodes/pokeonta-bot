@@ -5,7 +5,7 @@ from discord import Guild, Member, utils
 class Onboarding(Cog):
     @Cog.listener()
     async def on_ready(self):
-        for member in self.client.guilds[0].guild.members:
+        for member in self.client.guilds[0].members:
             if self.should_give_role(member):
                 await self.assign_role(member)
 
