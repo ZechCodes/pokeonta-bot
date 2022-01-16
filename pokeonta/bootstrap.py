@@ -40,6 +40,8 @@ def connect_db(logger):
 
 def create_bot(logger) -> discord.ext.commands.Bot:
     bot_settings = pokeonta.config.scope_getter("bot")
+    intents = discord.Intents.default()
+    intents.members = True
 
     logger.debug(f"Creating bot with prefix '{bot_settings('prefix')}'")
     client = discord.ext.commands.Bot(
@@ -48,6 +50,7 @@ def create_bot(logger) -> discord.ext.commands.Bot:
             name=bot_settings("status"),
             type=discord.ActivityType.watching,
         ),
+        intents=intents,
     )
     client.remove_command("help")
     return client
@@ -55,9 +58,15 @@ def create_bot(logger) -> discord.ext.commands.Bot:
 
 def load_cogs(client: discord.ext.commands.Bot, logger):
     logger.debug("Loading cogs")
-    files = ("production" if pokeonta.config.get_setting("PRODUCTION_BOT") else "development",)
+    files = (
+        "production"
+        if pokeonta.config.get_setting("PRODUCTION_BOT")
+        else "development",
+    )
     for cog, settings in pokeonta.config.get_scope("cogs", filenames=files):
-        enabled = settings if isinstance(settings, bool) else settings.get("enabled", True)
+        enabled = (
+            settings if isinstance(settings, bool) else settings.get("enabled", True)
+        )
         path = (
             f"pokeonta.cogs.{cog}"
             if isinstance(settings, bool) or not settings.get("from")
@@ -88,7 +97,7 @@ def run(client, logger):
 
 
 def setup_logger():
-    """ Configures how logs are printed and sets the log level. """
+    """Configures how logs are printed and sets the log level."""
     log_settings = config.scope_getter("logging")
 
     log_format = log_settings("format")
@@ -105,13 +114,15 @@ def setup_logger():
     }
     level = levels.get(
         log_settings("level", env_name="LOGGING_LEVEL", default="").casefold(),
-        logging.INFO
+        logging.INFO,
     )
 
     logging.basicConfig(
         format=log_format,
         datefmt=date_format,
-        level=levels.get(log_settings("global_level", default="").casefold(), logging.ERROR)
+        level=levels.get(
+            log_settings("global_level", default="").casefold(), logging.ERROR
+        ),
     )
 
     logger = pokeonta.logging.get_logger()
@@ -125,7 +136,9 @@ def setup_logger():
 
 
 def _get_token():
-    token = pokeonta.config.get_setting("token", scope="bot", env_name="DISCORD_TOKEN", default="")
+    token = pokeonta.config.get_setting(
+        "token", scope="bot", env_name="DISCORD_TOKEN", default=""
+    )
     return token.strip()
 
 
