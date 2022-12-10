@@ -98,7 +98,7 @@ class AirSupportCog(Cog):
 
         # Ensure the time is a proper format and that it's not so far in the future that it can't exist
         time = self.parse_time(raw_time)
-        if not time or time - self.now >= timedelta(hours=1, minutes=45):
+        if not time or time - self.now >= timedelta(days=1):
             await ctx.send(
                 f"{ctx.author.mention} `{raw_time}` is either not a valid time or is too far in the future."
             )
