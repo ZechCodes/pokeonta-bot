@@ -36,7 +36,7 @@ jobs:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     - name: Save DigitalOcean kubeconfig
-      run: doctl kubernetes cluster kubeconfig save personal-kubernetes
+      run: doctl kubernetes cluster kubeconfig save production-hosting
 
     - name: Deploy to DigitalOcean Kubernetes
       run: kubectl apply -f $GITHUB_WORKSPACE/manifests/bot.yaml -n pokeonta
