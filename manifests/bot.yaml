@@ -17,14 +17,12 @@ spec:
       containers:
         - name: pokeonta-bot-v2
           image: zzmmrmn/pokeonta-bot:<IMAGE_VERSION>
+          envFrom:
+            - secretRef:
+                name: discord-bot-secrets
           env:
             - name: PRODUCTION_BOT
               value: "PRODUCTION"
-            - name: "DISCORD_TOKEN"
-              valueFrom:
-                secretKeyRef:
-                  name: discord.token
-                  key: token
             - name: "DB_HOST"
               value: "private-personal-postgres-cluster-1-apr-26-backup-do-user-87772.a.db.ondigitalocean.com"
             - name: "DB_PORT"
@@ -35,8 +33,3 @@ spec:
               value: "pokeonta"
             - name: "BOT_IMAGE_VERSION"
               value: "<IMAGE_VERSION>"
-            - name: "DB_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-password
-                  key: password
