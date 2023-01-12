@@ -112,4 +112,4 @@ postgres-data
 /bot/env
 /development.yaml
 pg-pword.yaml
-secrets.txt
+*.secrets*
