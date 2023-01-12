@@ -5,6 +5,12 @@ import logging
 from pokeonta.models import PostgresqlDatabase, set_database
 
 
+import pprint
+import os
+
+pprint.pprint(dict(os.environ))
+
+
 def connect_db(logger):
     logger.info(f"Attempting to connect the DB")
 
