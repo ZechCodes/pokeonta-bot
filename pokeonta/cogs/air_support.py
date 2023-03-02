@@ -75,7 +75,7 @@ class AirSupportCog(Cog):
     @Cog.command()
     async def raider(self, ctx: Context):
         author: discord.Member = ctx.author
-        raid_role = discord.utils.get(ctx.guild.roles, name="Raid")
+        raid_role = discord.utils.get(ctx.guild.roles, name="Raiders")
         if raid_role in author.roles:
             await author.remove_roles(raid_role)
             await ctx.send(
