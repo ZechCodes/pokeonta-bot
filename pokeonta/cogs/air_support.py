@@ -32,7 +32,7 @@ class AirSupportCog(Cog):
 
     @property
     def now(self) -> datetime:
-        """ The current time in NY. """
+        """The current time in NY."""
         return datetime.now(gettz("America/New_York"))
 
     @Cog.command()
@@ -56,7 +56,7 @@ class AirSupportCog(Cog):
             .add_field(
                 name="Seeing Invites",
                 value="You can see who has requested an invite to a raid using the `!invites` command:"
-                      "```\n!invites Vander\n```",
+                "```\n!invites Vander\n```",
                 inline=False,
             )
             .add_field(
@@ -71,6 +71,21 @@ class AirSupportCog(Cog):
                 url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/Item_1408_5.png"
             )
         )
+
+    @Cog.command()
+    async def raider(self, ctx: Context):
+        author: discord.Member = ctx.author
+        raid_role = discord.utils.get(ctx.guild.roles, name="Raid")
+        if raid_role in author.roles:
+            await author.remove_roles(raid_role)
+            await ctx.send(
+                f"{author.mention} you no longer have the raiders role", delete_after=10
+            )
+        else:
+            await author.add_roles(raid_role)
+            await ctx.send(
+                f"{author.mention} you've been given the raiders role", delete_after=10
+            )
 
     @Cog.group(aliases=("host", "h", "Hosting", "Host", "H", "r", "R", "raid"))
     async def hosting(
@@ -131,11 +146,11 @@ class AirSupportCog(Cog):
                     f"\n\n[On This Message]({message.jump_url}) react with:\n"
                     f"{raid_pass} if you can invite people\n"
                     f"{remote_pass} if you need an invite"
-                )
+                ),
             ).set_author(
                 name=f"{raid_type} - {group.location} @ {time:%-I:%M%p}".title(),
                 url=message.jump_url,
-                icon_url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/tx_raid_icon.png"
+                icon_url="https://raw.githubusercontent.com/ZeChrales/PogoAssets/master/static_assets/png/tx_raid_icon.png",
             )
         )
 
@@ -173,14 +188,23 @@ class AirSupportCog(Cog):
         message = await self.get_message(
             self.air_support_channel(guild), reaction.message_id
         )
-        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
-        raid_type = group.raid_type[2:group.raid_type.rfind(":")] if group.raid_type.startswith("<") else group.raid_type
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(
+            gettz("America/New_York")
+        )
+        raid_type = (
+            group.raid_type[2 : group.raid_type.rfind(":")]
+            if group.raid_type.startswith("<")
+            else group.raid_type
+        )
         trainer = self.get_trainer_card(reaction.member.id)
         if reaction.emoji.name == "ℹ️":
             await self.send_invites_list(host, raids, group.location, False)
             await message.remove_reaction(reaction.emoji, reaction.member)
         elif reaction.emoji.name == "🚫":
-            if reaction.member == host or reaction.member.guild_permissions.manage_messages:
+            if (
+                reaction.member == host
+                or reaction.member.guild_permissions.manage_messages
+            ):
                 await self.cancel_group(raids, group, False)
             await message.remove_reaction(reaction.emoji, reaction.member)
         elif reaction.emoji.name == "remote":
@@ -194,12 +218,12 @@ class AirSupportCog(Cog):
                 f"{card.friend_code} - {trainer.trainer_name}'s Friend Code",
                 embed=discord.Embed(
                     description=f"{reaction.member.mention} ({trainer.trainer_name}) wants an invite, get their "
-                                f"friend code above"
+                    f"friend code above"
                 ).set_author(
                     name=f"{raid_type.title()} - {group.location.title()} @ {time:%-I:%M%p}",
                     icon_url=reaction.emoji.url,
-                    url=message.jump_url
-                )
+                    url=message.jump_url,
+                ),
             )
         elif reaction.emoji.name == "raidpass":
             card = self.get_trainer_card(reaction.member.id)
@@ -207,12 +231,12 @@ class AirSupportCog(Cog):
                 f"{card.friend_code} - {trainer.trainer_name}'s Friend Code",
                 embed=discord.Embed(
                     description=f"{reaction.member.mention} ({trainer.trainer_name}) will be joining and can invite, "
-                                f"get their friend code above"
+                    f"get their friend code above"
                 ).set_author(
                     name=f"{raid_type.title()} - {group.location.title()} @ {time:%-I:%M%p}",
                     icon_url=reaction.emoji.url,
-                    url=message.jump_url
-                )
+                    url=message.jump_url,
+                ),
             )
 
     async def get_message(
@@ -225,15 +249,23 @@ class AirSupportCog(Cog):
 
     # Helper Functions
 
-    async def cancel_group(self, channel: discord.TextChannel, group: AirSupportGroup, show_invitees: bool = False):
+    async def cancel_group(
+        self,
+        channel: discord.TextChannel,
+        group: AirSupportGroup,
+        show_invitees: bool = False,
+    ):
 
-        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
-        message = (
-            f"Removing {group.raid_type} - {group.location} @ {time:%-I:%M%p}"
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(
+            gettz("America/New_York")
         )
+        message = f"Removing {group.raid_type} - {group.location} @ {time:%-I:%M%p}"
         if show_invitees:
             rsvps = list(
-                filter(lambda rsvp: not rsvp.bot, await self.get_rsvps(group, channel.guild))
+                filter(
+                    lambda rsvp: not rsvp.bot,
+                    await self.get_rsvps(group, channel.guild),
+                )
             )
             message = (
                 f"Canceled {group.raid_type} - {group.raid_type} @ {time:%-I:%M%p}\nDropping RSVPs from: "
@@ -241,10 +273,7 @@ class AirSupportCog(Cog):
             )
         await self.delete_group(group.id, self.air_support_channel(channel.guild).id)
         await channel.send(
-            embed=discord.Embed(
-                description=message,
-                color=Colors.YELLOW
-            )
+            embed=discord.Embed(description=message, color=Colors.YELLOW)
         )
 
     def create_group(
@@ -266,7 +295,11 @@ class AirSupportCog(Cog):
         return group
 
     async def create_group_invite_message(
-        self, host: discord.Member, time: datetime, raid_type: str, location: str,
+        self,
+        host: discord.Member,
+        time: datetime,
+        raid_type: str,
+        location: str,
     ) -> discord.Message:
         raids = discord.utils.get(host.guild.channels, name="raids")
         remote_emoji: discord.Emoji = discord.utils.get(
@@ -289,12 +322,12 @@ class AirSupportCog(Cog):
                         f"ℹ️ See RSVPs **|** "
                         f"🚫 End the group"
                     ),
-                    inline=False
+                    inline=False,
                 )
                 .add_field(
                     name="Coordination",
                     value=f"Discuss & coordinate in {raids.mention}",
-                    inline=False
+                    inline=False,
                 )
                 .set_thumbnail(url=remote_emoji.url)
             ),
@@ -316,9 +349,7 @@ class AirSupportCog(Cog):
 
             group.delete_instance()
 
-    def get_group(
-        self, location: str
-    ) -> Optional[AirSupportGroup]:
+    def get_group(self, location: str) -> Optional[AirSupportGroup]:
         return AirSupportGroup.get_or_none(
             AirSupportGroup.location == location.casefold(),
         )
@@ -349,11 +380,11 @@ class AirSupportCog(Cog):
         return await discord.utils.get(message.reactions, emoji=emoji).users().flatten()
 
     def get_trainer_card(self, member_id: int) -> Optional[TrainerCards]:
-        """ Gets a trainer card for a member. """
+        """Gets a trainer card for a member."""
         return TrainerCards.get_or_none(TrainerCards.user_id == member_id)
 
     def is_trainer_card_complete(self, member: discord.Member) -> bool:
-        """ Checks that a member has setup a trainer and that it has a trainer name and friend code. """
+        """Checks that a member has setup a trainer and that it has a trainer name and friend code."""
         card = self.get_trainer_card(member.id)
         if not card:
             return False
@@ -413,13 +444,21 @@ class AirSupportCog(Cog):
             channel.id,
         )
 
-    async def send_invites_list(self, host: discord.Member, channel: discord.TextChannel, location: str, send_tag: bool = True):
+    async def send_invites_list(
+        self,
+        host: discord.Member,
+        channel: discord.TextChannel,
+        location: str,
+        send_tag: bool = True,
+    ):
         group = self.get_group(location)
         if not group:
             await channel.send("Couldn't find a group for that location")
             return
 
-        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(gettz("America/New_York"))
+        time = group.time.replace(tzinfo=gettz("UTC")).astimezone(
+            gettz("America/New_York")
+        )
         embed = Embed(
             description="Here is everyone that has said they can attend:",
             title=f"RSVPs for {group.raid_type.title()} - {group.location.title()} @ {time:%-I:%M%p}",
