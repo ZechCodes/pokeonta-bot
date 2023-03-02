@@ -78,14 +78,10 @@ class AirSupportCog(Cog):
         raid_role = discord.utils.get(ctx.guild.roles, name="Raiders")
         if raid_role in author.roles:
             await author.remove_roles(raid_role)
-            await ctx.send(
-                f"{author.mention} you no longer have the raiders role", delete_after=10
-            )
+            await ctx.send(f"{author.mention} you no longer have the raiders role")
         else:
             await author.add_roles(raid_role)
-            await ctx.send(
-                f"{author.mention} you've been given the raiders role", delete_after=10
-            )
+            await ctx.send(f"{author.mention} you've been given the raiders role")
 
     @Cog.group(aliases=("host", "h", "Hosting", "Host", "H", "r", "R", "raid"))
     async def hosting(
