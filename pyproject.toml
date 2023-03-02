@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pokeonta-bot"
-version = "0.1.46"
+version = "0.1.47"
 description = ""
 authors = ["Zech Zimmerman <hi@zech.codes>"]
 
